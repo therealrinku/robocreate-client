@@ -1,8 +1,7 @@
 "use client";
 import CoolLoader from "@/components/CoolLoader";
 import { useEffect, useState } from "react";
-import { FaFacebook } from "react-icons/fa";
-import { FacebookProvider, useLogin } from "react-facebook";
+import { FacebookProvider } from "react-facebook";
 import FbHandler from "@/core/FBHandler";
 
 export default function Home() {
@@ -16,6 +15,10 @@ export default function Home() {
     return <CoolLoader />;
   }
 
+  return <HomeChild />;
+}
+
+function HomeChild() {
   return (
     <main className="flex flex-col items-center  gap-3 justify-center h-screen w-full ">
       <img
