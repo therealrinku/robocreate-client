@@ -1,7 +1,6 @@
 "use client";
 import CoolLoader from "@/components/CoolLoader";
 import { useEffect, useState } from "react";
-import { FacebookProvider } from "react-facebook";
 import FbHandler from "@/core/FBHandler";
 
 export default function Home() {
@@ -27,9 +26,7 @@ function HomeChild() {
       />
       <p className="mt-5 uppercase italic font-bold">Robocreate</p>
 
-      <FacebookProvider appId={process.env.NEXT_APP_FB_APP_ID || "hello_there"}>
-        <FbHandler />
-      </FacebookProvider>
+      <FbHandler />
 
       <p className="fixed bottom-5 mt-5 italic text-xs text-red-500">This is just a test mode. Lots of work needed 🫠</p>
     </main>
