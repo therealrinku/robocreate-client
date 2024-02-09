@@ -1,25 +1,25 @@
 import { useState } from "react";
-import { useLogin } from "react-facebook";
 import { FaFacebook } from "react-icons/fa";
 
 export default function FbHandler() {
-  const { login, status, isLoading, error } = useLogin();
   const [resp, setResp] = useState();
 
   const [postText, setPostText] = useState("");
 
   async function handleLogin() {
     try {
-      const response = await login({
-        scope: "pages_manage_posts",
-        // scope: `pages_manage_engagement,
-        // pages_manage_posts,
-        // pages_read_engagement,
-        // pages_read_user_engagement`,
+      const fbDialogPopupURI = `https://www.facebook.com/v19.0/dialog/oauth?`;
+      const requiredScopes = `pages_manage_engagement,pages_manage_posts,pages_read_engagement,pages_read_user_engagement`;
+
+      const searchParams = new URLSearchParams({
+        redirect_uri: window.location.origin,
+        client_id: "358037620373561",
+        scope: requiredScopes,
       });
 
-      //@ts-expect-error
-      setResp(response.authResponse);
+      const response = await fetch(fbDialogPopupURI + searchParams);
+
+      // setResp(response.authResponse);
       console.log(response, "RESPONSE____LOG");
     } catch (error: any) {
       console.log(error.message);
@@ -27,8 +27,7 @@ export default function FbHandler() {
   }
 
   function sendREQ() {
-    //@ts-expect-error
-    const apiUrl = `https://graph.facebook.com/v19.0/${resp.userID}/feed`;
+    const apiUrl = `https://graph.facebook.com/v19.0/dummypageid/feed`;
     // const futureDate = new Date("2024-02-15T12:00:00"); // Replace with your desired future date and time
     // const futureTimestamp = Math.floor(futureDate.getTime() / 1000);
 
@@ -44,8 +43,7 @@ export default function FbHandler() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        //@ts-expect-error
-        Authorization: `Bearer ${resp.accessToken}`,
+        Authorization: `Bearer dummy token`,
       },
       body: JSON.stringify(postData),
     })
