@@ -17,7 +17,7 @@ export default function CreatePostModal({ onClose }: Props) {
 
   async function handlePost() {
     //dont' allow past date
-    if (new Date(selectedPublishTimestamp).getTime() < new Date().getTime()) {
+    if (postNow === "no" && new Date(selectedPublishTimestamp).getTime() < new Date().getTime()) {
       alert("Cant't use past date");
       setSelectedPublishTimestamp(new Date().getTime());
       return;
