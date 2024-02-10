@@ -48,7 +48,10 @@ export default function FBDashboard() {
 
             <button
               className="flex items-center gap-2 border-red-500 bg-red-500 hover:bg-red-800 hover:border-red-800 py-2 px-3 text-sm"
-              onClick={destroyFBConnection}
+              onClick={() => {
+                destroyFBConnection();
+                router.push("/");
+              }}
             >
               <BsFillPlugFill size={16} />
               Disconnect
