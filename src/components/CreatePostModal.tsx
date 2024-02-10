@@ -10,12 +10,28 @@ export default function CreatePostModal({ onClose }: Props) {
   const { createFBPost, FBConnection, isLoading } = useFBConnection();
 
   const [message, setMessage] = useState("");
+  const [postNow, setPostNow] = useState("yes");
+  const [selectedPublishTimestamp, setSelectedPublishTimestamp] = useState<number>(Date.now());
+
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
 
   async function handlePost() {
+    //dont' allow past date
+    if (new Date(selectedPublishTimestamp).getTime() < new Date().getTime()) {
+      alert("Cant't use past date");
+      setSelectedPublishTimestamp(new Date().getTime());
+      return;
+    }
+
     try {
-      //@ts-expect-error
-      await createFBPost({ message, selectedPage: FBConnection?.accounts.data[selectedPageIndex] });
+      await createFBPost({
+        publishNow: postNow === "yes",
+        publishTimestamp: selectedPublishTimestamp,
+        message,
+        //@ts-expect-error
+        selectedPage: FBConnection?.accounts.data[selectedPageIndex],
+      });
+
       setMessage("");
     } catch (err: any) {
       alert(err.message);
@@ -26,6 +42,10 @@ export default function CreatePostModal({ onClose }: Props) {
     if (key.code == "Escape") {
       onClose();
     }
+  }
+
+  function handleChangeDate(dateString: string) {
+    setSelectedPublishTimestamp(new Date(dateString).getTime());
   }
 
   useEffect(() => {
@@ -54,7 +74,7 @@ export default function CreatePostModal({ onClose }: Props) {
           <select
             value={selectedPageIndex}
             onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
-            className="bg-inherit border p-1 text-xs outline-none"
+            className="bg-black border p-1 text-xs outline-none"
           >
             {FBConnection?.accounts?.data?.map((account, i) => {
               return (
@@ -65,7 +85,26 @@ export default function CreatePostModal({ onClose }: Props) {
             })}
           </select>
 
-          <div className="flex items-center gap-5 mt-5">
+          <div className="mt-2 flex items-center gap-2">
+            <select
+              value={postNow}
+              onChange={(e) => setPostNow(e.target.value)}
+              className="bg-black border p-2 text-xs outline-none"
+            >
+              <option value="yes">Post now</option>
+              <option value="no">Schedule</option>
+            </select>
+
+            {postNow === "no" && (
+              <input
+                onChange={(e) => handleChangeDate(e.target.value)}
+                className="bg-inherit border p-2 text-xs outline-none"
+                type="datetime-local"
+              />
+            )}
+          </div>
+
+          <div className="flex items-center gap-5 mt-10">
             <input
               placeholder="Post Text....."
               className="bg-inherit border-b p-2 outline-none text-sm"

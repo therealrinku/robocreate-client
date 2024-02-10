@@ -1,6 +1,8 @@
 export interface FBPostModel {
   //<>>> supporting text only for now!
   message: string;
+  publishNow: boolean;
+  publishTimestamp?: number;
   selectedPage: {
     access_token: string;
     category: string;

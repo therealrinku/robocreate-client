@@ -19,17 +19,23 @@ export function useFBConnection() {
     }
 
     const apiUrl = `${FB_HANDLER_BASE_URL}/${FBPostInfo.selectedPage.id}/feed`;
-    // const futureDate = new Date("2024-02-15T12:00:00"); // Replace with your desired future date and time
-    // const futureTimestamp = Math.floor(futureDate.getTime() / 1000);
 
     const postData = {
       message: FBPostInfo.message,
       // link: "your_url",
-      // publish the post immediately
+      // publish the post immediately by default
       published: true,
-      // configure a time and datepicker to schedule a post later!!!
-      // scheduled_publish_time: futureTimestamp,
     };
+
+    //if publish timestamp was given and publishNow is false, schedule that post
+    //check if date is valid :> ?
+    if (!FBPostInfo.publishNow && FBPostInfo.publishTimestamp) {
+      postData.published = false;
+
+      const futureTimestamp = Math.floor(FBPostInfo.publishTimestamp / 1000);
+      //@ts-expect-error
+      postData.scheduled_publish_time = futureTimestamp;
+    }
 
     try {
       setIsLoading(true);
