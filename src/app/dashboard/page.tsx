@@ -3,10 +3,10 @@ import CreatePostModal from "@/components/CreatePostModal";
 import HomeBranding from "@/components/HomeBranding";
 import { useFBConnection } from "@/hooks/useFBConnection";
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
-import { BsCaretUpSquare, BsFillPlugFill } from "react-icons/bs";
+import { Fragment, useEffect, useState } from "react";
+import { BsFillPlugFill } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
-import { FiPenTool, FiPower } from "react-icons/fi";
+import { FiPenTool } from "react-icons/fi";
 
 export default function FBDashboard() {
   const { hasFBConnection, FBConnection, destroyFBConnection } = useFBConnection();
@@ -14,9 +14,11 @@ export default function FBDashboard() {
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
 
-  if (!hasFBConnection) {
-    router.push("/");
-  }
+  useEffect(() => {
+    if (!hasFBConnection) {
+      router.push("/");
+    }
+  }, []);
 
   return (
     <Fragment>
