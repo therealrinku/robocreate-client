@@ -20,16 +20,14 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-There are many great social media applications in the market and we wanna be another one to compete with them or even beat them in their own game.
-
-Of course, It's not gonna be easy but we're ready to rumble!
+Manage your social media accounts with ease using Robocreate
 
 
 <!-- USAGE EXAMPLES -->
 ## Features
 
-Firstly we are only gonna support managing facebook pages then we gonna slowly diversify it to manage instagram, twitter and other platforms too.
-So it's gonna be slow and consistent process.
+Create post on your facebook page
+Supports for other social media coming soon
 
 <!-- LICENSE -->
 ## License
