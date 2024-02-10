@@ -1,34 +1,33 @@
 "use client";
 import CoolLoader from "@/components/CoolLoader";
-import { useEffect, useState } from "react";
-import FbHandler from "@/core/FBHandler";
+import FBLoginHandler from "@/core/FBLoginHandler";
+import HomeBranding from "@/components/HomeBranding";
+import { useFBConnection } from "@/hooks/useFBConnection";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [showLoader, setShowLoader] = useState(true);
+  const { isLoading, hasFBConnection } = useFBConnection();
+  const router = useRouter();
 
-  useEffect(() => {
-    setInterval(() => setShowLoader(false), 3000);
-  }, []);
-
-  if (showLoader) {
+  if (isLoading) {
     return <CoolLoader />;
   }
 
-  return <HomeChild />;
-}
+  if (hasFBConnection) {
+    router.push("/dashboard");
+    return;
+  }
 
-function HomeChild() {
   return (
-    <main className="flex flex-col items-center  gap-3 justify-center h-screen w-full ">
-      <img
-        className="h-20 w-20"
-        src="https://camo.githubusercontent.com/e9c1d8b7beb6f26cefc5ab0742b592df1abb0ceb398ee74c1ce33028460b3d9b/68747470733a2f2f63646e2d69636f6e732d706e672e666c617469636f6e2e636f6d2f3132382f31323433352f31323433353233342e706e67"
-      />
-      <p className="mt-5 uppercase italic font-bold">Robocreate</p>
+    <main className="flex flex-col items-center  gap-3 justify-center  h-screen w-full ">
+      <HomeBranding />
 
-      <FbHandler />
-
-      <p className="fixed bottom-5 mt-5 italic text-xs text-red-500">This is just a test mode. Lots of work needed 🫠</p>
+      <div className="flex flex-col items-center">
+        <p className="text-center font-bold">
+          Connect your Facebook Page <br />& Get Started now.
+        </p>
+        <FBLoginHandler />
+      </div>
     </main>
   );
 }
