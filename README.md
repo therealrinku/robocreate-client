@@ -16,7 +16,7 @@
 Robocreate is minimalistic social media management application. <br/>
 Manage your social media accounts with ease using Robocreate. Bunch of amazing features coming soon!
 
-See the technical high level overview of the project here:  <a href="https://github.com/robocreate/main/ARCH.md" target="_blank">Technical Overview</a>
+See the technical high level overview of the project here:  <a href="https://github.com/therealrinku/robocreate/blob/main/ARCH.md" target="_blank">Technical Overview</a>
 
 
 ## Features
