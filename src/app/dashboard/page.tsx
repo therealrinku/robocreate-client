@@ -1,6 +1,5 @@
 "use client";
 import CreatePostModal from "@/components/CreatePostModal";
-import HomeBranding from "@/components/HomeBranding";
 import { useFBConnection } from "@/hooks/useFBConnection";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
@@ -23,8 +22,6 @@ export default function FBDashboard() {
   return (
     <Fragment>
       <div className="flex flex-col h-screen items-center justify-center">
-        <HomeBranding />
-
         <div className="flex items-center pb-10 flex-col gap-3 mb-5">
           <p className="font-bold">Active FB Connections ({FBConnection?.accounts?.data?.length})</p>
           {hasFBConnection &&
