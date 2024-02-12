@@ -16,23 +16,30 @@
   </p>
 </div>
 
-
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Manage your social media accounts with ease using Robocreate
 
+See the technical high level overview of the project here:  <a href="https://github.com/robocreate/main/ARCH.md" target="_blank">Technical Overview</a>
 
-<!-- USAGE EXAMPLES -->
+
 ## Features
 
-Create post on your facebook page
-Supports for other social media coming soon
+- Create post on your preferred social media pages (facebook page only for now) ✨
+- Support for other social media coming soon 🔥
+- Ability to create bulk posts(same post for multiple social media at once) coming soon 🔥
+- Clean and Minimal dashboard to see the latest posts ✨
+- Analytics coming soon 🔥
 
-<!-- LICENSE -->
 ## License
 
 Proprietary License. All rights are completely reserved.
+
+
+## Note
+
+All the features maynot be available right now as application is in active development mode right now 🥲
+
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
