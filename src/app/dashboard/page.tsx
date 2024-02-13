@@ -15,7 +15,9 @@ import {
 
 export default function FBDashboard() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
-  const [activeTab, setActiveTab] = useState(window.location.href?.includes("access_token") ? "Channels" : "Create");
+  const [activeTab, setActiveTab] = useState(
+    typeof window !== "undefined" && window.location.href?.includes("access_token") ? "Channels" : "Create"
+  );
 
   const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
   const fbDialogPopupURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
