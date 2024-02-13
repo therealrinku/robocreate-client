@@ -8,15 +8,18 @@ export default function FBDashboard() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [activeTab, setActiveTab] = useState("Create");
 
+  const [fbDialogPopupURI, setFBDialogPopupURI] = useState("");
+
   useEffect(() => {
     if (window) {
       const hasAccessToken = window.location.href?.includes("access_token");
       setActiveTab(hasAccessToken ? "Channels" : "Create");
+
+      const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
+      const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
+      setFBDialogPopupURI(fullURI);
     }
   }, []);
-
-  const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
-  const fbDialogPopupURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
 
   return (
     <Fragment>
