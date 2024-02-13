@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} max-w-[850px] mx-auto border-l-2 border-r-2`}>
+      <body className={`${inter.className} max-w-[850px] min-h-screen mx-auto border-l border-r`}>
         <Providers>
           <Nav />
           {children}

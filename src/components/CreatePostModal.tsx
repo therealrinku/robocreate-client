@@ -1,4 +1,3 @@
-import { useFBConnection } from "@/hooks/useFBConnection";
 import { useEffect, useState } from "react";
 import { FiSend, FiX } from "react-icons/fi";
 
@@ -7,8 +6,6 @@ interface Props {
 }
 
 export default function CreatePostModal({ onClose }: Props) {
-  const { createFBPost, FBConnection, isLoading } = useFBConnection();
-
   const [message, setMessage] = useState("");
   const [postNow, setPostNow] = useState("yes");
   const [selectedPublishTimestamp, setSelectedPublishTimestamp] = useState<number>(Date.now());
@@ -24,13 +21,13 @@ export default function CreatePostModal({ onClose }: Props) {
     }
 
     try {
-      await createFBPost({
-        publishNow: postNow === "yes",
-        publishTimestamp: selectedPublishTimestamp,
-        message,
-        //@ts-expect-error
-        selectedPage: FBConnection?.accounts.data[selectedPageIndex],
-      });
+      // await createFBPost({
+      //   publishNow: postNow === "yes",
+      //   publishTimestamp: selectedPublishTimestamp,
+      //   message,
+      //   //@ts-expect-error
+      //   selectedPage: FBConnection?.accounts.data[selectedPageIndex],
+      // });
 
       setMessage("");
     } catch (err: any) {
@@ -76,13 +73,13 @@ export default function CreatePostModal({ onClose }: Props) {
             onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
             className="bg-black border p-1 text-xs outline-none"
           >
-            {FBConnection?.accounts?.data?.map((account, i) => {
+            {/* {FBConnection?.accounts?.data?.map((account, i) => {
               return (
                 <option key={account.id} value={i}>
                   {account.name}
                 </option>
               );
-            })}
+            })} */}
           </select>
 
           <div className="mt-2 flex items-center gap-2">
@@ -113,11 +110,11 @@ export default function CreatePostModal({ onClose }: Props) {
               onChange={(e) => setMessage(e.target.value)}
             />
             <button
-              disabled={!message.trim() || isLoading}
+              // disabled={!message.trim() || isLoading}
               className="mt-5 underline disabled:opacity-50"
               onClick={handlePost}
             >
-              {isLoading ? "..." : <FiSend />}
+              {/* {isLoading ? "..." : <FiSend />} */}
             </button>
           </div>
         </div>
