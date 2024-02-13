@@ -1,32 +1,20 @@
-"use client";
-import CoolLoader from "@/components/CoolLoader";
-import FBLoginHandler from "@/core/FBLoginHandler";
-import HomeBranding from "@/components/HomeBranding";
-import { useFBConnection } from "@/hooks/useFBConnection";
-import { useRouter } from "next/navigation";
+import { getMe } from "@/services/authService";
+import LandingMain from "../assets/landing_main.svg";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  const { isLoading, hasFBConnection } = useFBConnection();
-  const router = useRouter();
+export default async function Home() {
+  const response = await getMe();
 
-  if (isLoading) {
-    return <CoolLoader />;
-  }
-
-  if (hasFBConnection) {
-    router.push("/dashboard");
-    return;
+  // if user is logged in, go to dashboard
+  if (response.ok) {
+    redirect("/dashboard");
   }
 
   return (
-    <main className="flex flex-col items-center  gap-3 justify-center  h-screen w-full ">
-      <HomeBranding />
-
+    <main className="flex relative flex-col items-center  gap-3 justify-center h-[88vh] w-full ">
       <div className="flex flex-col items-center">
-        <p className="text-center font-bold">
-          Connect your Facebook Page <br />& Get Started now.
-        </p>
-        <FBLoginHandler />
+        <Image src={LandingMain} alt="main" className="h-full w-full" />
       </div>
     </main>
   );
