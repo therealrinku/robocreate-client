@@ -1,4 +1,3 @@
-import { FiX } from "react-icons/fi";
 import ModalWrapper from "./ModalWrapper";
 import { Logo } from "./Nav";
 import { FormEvent, useState } from "react";
@@ -36,10 +35,6 @@ export default function LoginModal({ onClose }: Props) {
         onSubmit={handleSubmit}
         className="relative bg-white shadow-md border min-w-[300px] max-w-[800px] px-5 py-7 flex flex-col items-center gap-5 rounded-md"
       >
-        <button type="button" onClick={() => onClose()} className="border rounded-md p-1 absolute right-2 top-2">
-          <FiX />
-        </button>
-
         <Logo />
 
         <input
@@ -66,6 +61,10 @@ export default function LoginModal({ onClose }: Props) {
           className="border bg-red-500 py-2 text-white rounded-md text-sm font-bold w-full disabled:opacity-60"
         >
           Login
+        </button>
+
+        <button type="button" onClick={() => onClose()} className="text-xs underline">
+          Cancel
         </button>
       </form>
     </ModalWrapper>
