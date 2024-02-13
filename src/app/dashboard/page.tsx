@@ -15,7 +15,10 @@ import {
 
 export default function FBDashboard() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("Create");
+  const [activeTab, setActiveTab] = useState(window.location.href?.includes("access_token") ? "Channels" : "Create");
+
+  const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
+  const fbDialogPopupURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
 
   return (
     <Fragment>
@@ -119,28 +122,24 @@ export default function FBDashboard() {
             </div>
 
             <div className="mt-5 flex flex-col gap-3">
-              <div className="flex items-center gap-2 border rounded-md p-2">
-                <FiFacebook />
-                <p className="font-bold">An Attractive Mindset</p>
-                <button className="text-red-500 font-bold">disconnect</button>
-              </div>
+              <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
+                <FiFacebook size={20} />
+                <button className="text-red-500 font-bold">Connect</button>
+              </a>
 
-              <div className="flex items-center gap-2 border rounded-md p-2">
-                <FiTwitter />
-                <p className="font-bold">An Attractive Mindset</p>
-                <button className="text-red-500 font-bold">disconnect</button>
-              </div>
+              <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-200">
+                <FiTwitter size={20} />
+                <button disabled className="font-bold">
+                  Connect ✨
+                </button>
+              </button>
 
-              <div className="flex items-center gap-2 border rounded-md p-2">
-                <FiInstagram />
-                <p className="font-bold">An Attractive Mindset</p>
-                <button className="text-red-500 font-bold">disconnect</button>
-              </div>
-
-              <div className="flex items-center gap-2 border rounded-md p-2">
-                <FiTwitch />
-                <button className="text-green-500 font-bold">Connect ✨</button>
-              </div>
+              <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-200">
+                <FiInstagram size={20} />
+                <button disabled className="font-bold">
+                  Connect ✨
+                </button>
+              </button>
             </div>
           </div>
         )}
