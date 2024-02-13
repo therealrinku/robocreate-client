@@ -1,23 +1,19 @@
 "use client";
 import CreatePostModal from "@/components/CreatePostModal";
 import DashboardTabs from "@/components/DashboardTabs";
-import { Fragment, useState } from "react";
-import {
-  FiClock,
-  FiFacebook,
-  FiInstagram,
-  FiMessageCircle,
-  FiPlus,
-  FiThumbsUp,
-  FiTwitch,
-  FiTwitter,
-} from "react-icons/fi";
+import { Fragment, useEffect, useState } from "react";
+import { FiClock, FiFacebook, FiInstagram, FiMessageCircle, FiPlus, FiThumbsUp, FiTwitter } from "react-icons/fi";
 
 export default function FBDashboard() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
-  const [activeTab, setActiveTab] = useState(
-    typeof window !== "undefined" && window.location.href?.includes("access_token") ? "Channels" : "Create"
-  );
+  const [activeTab, setActiveTab] = useState("Create");
+
+  useEffect(() => {
+    if (window) {
+      const hasAccessToken = window.location.href?.includes("access_token");
+      setActiveTab(hasAccessToken ? "Channels" : "Create");
+    }
+  }, []);
 
   const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
   const fbDialogPopupURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
