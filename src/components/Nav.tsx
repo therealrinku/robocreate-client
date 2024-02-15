@@ -13,34 +13,19 @@ export default function Nav() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isLoading, user, setupUser, logoutUser } = useUser();
+  const { isLoading, user, logoutUser } = useUser();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  const [showCoolLoader, setShowCoolLoader] = useState(true);
-
-  async function handleLoginModalClose(params?: { loginSuccess: boolean }) {
-    if (params?.loginSuccess) {
-      const resp = await getMe();
-
-      if (resp.ok) {
-        setupUser(await resp.json());
-        setShowLoginModal(false);
-        router.push("/dashboard");
-      }
-
-      return;
-    }
-    setShowLoginModal(false);
-  }
+  const [showCoolLoader, setShowCoolLoader] = useState(isLoading);
 
   useEffect(() => {
     //show cool timer for at least 2 sec
     setTimeout(() => setShowCoolLoader(false), 3000);
   }, []);
 
-  if (isLoading || showCoolLoader) {
+  if (showCoolLoader) {
     return <CoolLoader />;
   }
 
@@ -74,7 +59,7 @@ export default function Nav() {
                   <button
                     disabled={isLoading}
                     onClick={() => setShowUpgradeModal(true)}
-                    className="font-bold border px-5 py-2 flex items-center gap-2 text-sm rounded-md bg-yellow-300 text-yellow-800"
+                    className="font-bold border px-5 py-2 flex items-center gap-2 text-sm rounded-md bg-yellow-300 text-yellow-800 disabled:opacity-60"
                   >
                     <AiFillCrown size={20} />
                     <p>Upgrade</p>
@@ -84,7 +69,7 @@ export default function Nav() {
                 <button
                   disabled={isLoading}
                   onClick={logoutUser}
-                  className="font-bold border px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
+                  className="font-bold border px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600 disabled:opacity-60"
                 >
                   Logout
                 </button>
@@ -94,7 +79,7 @@ export default function Nav() {
         </div>
       </nav>
 
-      {showLoginModal && <LoginModal onClose={handleLoginModalClose} />}
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
 
       {showUpgradeModal && <UpgradeModal onClose={() => setShowUpgradeModal(false)} />}
     </Fragment>

@@ -24,12 +24,14 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     (async function () {
-      const response = await getMe();
-      setIsLoading(false);
-      // if user is logged in, save user to context and
-      // go to dashboard
-      if (response.ok) {
+      try {
+        const response = await getMe();
+        // if user is logged in, save user to context and
+        // go to dashboard
         setUser(await response.json());
+      } catch (err) {
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, []);

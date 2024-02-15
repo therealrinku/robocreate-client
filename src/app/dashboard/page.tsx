@@ -3,7 +3,7 @@ import CreatePostModal from "@/components/CreatePostModal";
 import DashboardTabs from "@/components/DashboardTabs";
 import { useUser } from "@/hooks/useUser";
 import { connectSocialMedia, getLatestPosts } from "@/services/connectionService";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { FiFacebook, FiInstagram, FiLink, FiPlus, FiShare, FiTwitter } from "react-icons/fi";
 
@@ -21,15 +21,16 @@ export default function FBDashboard() {
   const [latestPosts, setLatestPosts] = useState([]);
 
   useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+
     (async function () {
       try {
-        if (!user) {
-          redirect("/");
-        }
-
+        if (!user) return;
         setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
 
-        const connectionsArr = user.connections.split(",");
+        const connectionsArr = user && user.connections.split(",");
         setConnectedChannels((prev) => {
           return {
             ...prev,
@@ -58,7 +59,6 @@ export default function FBDashboard() {
           setFBDialogPopupURI(fullURI);
         }
       } catch (err) {
-        router.push("/");
       } finally {
         setIsLoading(false);
       }

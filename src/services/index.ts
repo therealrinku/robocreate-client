@@ -16,7 +16,7 @@ export async function roboCreateAPIRequest({
 }: roboCreateAPIRequestModel) {
   const formattedParams = params ? new URLSearchParams(JSON.stringify(params)) : "";
 
-  return fetch(`${robocreateAPIBaseUrl}/${endpoint}${params ? `?${formattedParams}` : ``}`, {
+  const resp = await fetch(`${robocreateAPIBaseUrl}/${endpoint}${params ? `?${formattedParams}` : ``}`, {
     method: method,
     credentials: "include",
     headers: {
@@ -25,4 +25,11 @@ export async function roboCreateAPIRequest({
     },
     body: JSON.stringify(body),
   });
+
+  if (!resp.ok) {
+    const jsonResp = await resp.json();
+    throw new Error(jsonResp.error);
+  }
+
+  return resp;
 }

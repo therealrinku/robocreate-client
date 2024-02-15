@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Nav from "@/components/Nav";
+import NotificationPopup from "@/components/NotificationPopup";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,7 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <Providers>
           <Nav />
-
+<NotificationPopup/>
           <div className="max-w-[850px] min-h-[89vh] mx-auto border-l border-r">{children}</div>
         </Providers>
       </body>
