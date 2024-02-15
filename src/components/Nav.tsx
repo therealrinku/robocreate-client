@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import LoginModal from "./LoginModal";
 import { getMe } from "@/services/authService";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,6 +18,8 @@ export default function Nav() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
+  const [showCoolLoader, setShowCoolLoader] = useState(true);
+
   async function handleLoginModalClose(params?: { loginSuccess: boolean }) {
     if (params?.loginSuccess) {
       const resp = await getMe();
@@ -33,7 +35,12 @@ export default function Nav() {
     setShowLoginModal(false);
   }
 
-  if (isLoading) {
+  useEffect(() => {
+    //show cool timer for at least 2 sec
+    setTimeout(() => setShowCoolLoader(false), 3000);
+  }, []);
+
+  if (isLoading || showCoolLoader) {
     return <CoolLoader />;
   }
 
