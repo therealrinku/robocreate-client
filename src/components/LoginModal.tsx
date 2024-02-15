@@ -1,7 +1,7 @@
 import ModalWrapper from "./ModalWrapper";
-import { Logo } from "./Nav";
 import { FormEvent, useState } from "react";
 import { loginUser } from "@/services/authService";
+import Logo from "./Logo";
 
 interface Props {
   onClose: (params?: { loginSuccess: boolean }) => void;
@@ -35,7 +35,7 @@ export default function LoginModal({ onClose }: Props) {
         onSubmit={handleSubmit}
         className="relative bg-white shadow-md border min-w-[300px] max-w-[800px] px-5 py-7 flex flex-col items-center gap-5 rounded-md"
       >
-        <Logo />
+        <Logo logoOnly />
 
         <input
           type="text"
