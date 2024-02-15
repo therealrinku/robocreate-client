@@ -22,10 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} max-w-[850px] min-h-screen mx-auto border-l border-r`}>
+      <body className={`${inter.className}`}>
         <Providers>
           <Nav />
-          {children}
+
+          <div className="max-w-[850px] min-h-[89vh] mx-auto border-l border-r">{children}</div>
         </Providers>
       </body>
     </html>

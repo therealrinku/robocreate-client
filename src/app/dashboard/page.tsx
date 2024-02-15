@@ -1,24 +1,15 @@
 "use client";
 import CreatePostModal from "@/components/CreatePostModal";
 import DashboardTabs from "@/components/DashboardTabs";
-import { getMe } from "@/services/authService";
+import { useUser } from "@/hooks/useUser";
 import { connectSocialMedia, getLatestPosts } from "@/services/connectionService";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import {
-  FiClock,
-  FiFacebook,
-  FiInstagram,
-  FiLink,
-  FiMessageCircle,
-  FiPlus,
-  FiShare,
-  FiThumbsUp,
-  FiTwitter,
-} from "react-icons/fi";
+import { FiFacebook, FiInstagram, FiLink, FiPlus, FiShare, FiTwitter } from "react-icons/fi";
 
 export default function FBDashboard() {
   const router = useRouter();
+  const { user } = useUser();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [activeTab, setActiveTab] = useState("Create");
@@ -26,24 +17,23 @@ export default function FBDashboard() {
   const [fbDialogPopupURI, setFBDialogPopupURI] = useState("");
   const [connectedChannels, setConnectedChannels] = useState({ facebook: false });
 
-  const [userData, setUserData] = useState({});
-
   const [isLoading, setIsLoading] = useState(true);
   const [latestPosts, setLatestPosts] = useState([]);
 
   useEffect(() => {
     (async function () {
       try {
-        const _user = await (await getMe()).json();
-        setUserData(_user);
+        if (!user) {
+          redirect("/");
+        }
 
         setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
 
-        const connectionsArr = _user.connections.split(",");
+        const connectionsArr = user.connections.split(",");
         setConnectedChannels((prev) => {
           return {
             ...prev,
-            facebook: connectionsArr.includes("facebook"),
+            facebook: connectionsArr?.includes("facebook"),
           };
         });
 
@@ -210,19 +200,11 @@ export default function FBDashboard() {
                 </div>
 
                 <div className="mt-5 flex flex-col gap-3">
-                  {!connectedChannels.facebook ? (
-                    <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
-                      <FiFacebook size={20} />
-                      <button className="text-red-500 font-bold">Connect</button>
-                    </a>
-                  ) : (
-                    <button disabled className="flex items-center gap-2 border rounded-md p-2 disabled:bg-gray-100">
-                      <FiFacebook size={20} />
-                      <button disabled className="text-red-500 font-bold">
-                        Connected
-                      </button>
-                    </button>
-                  )}
+                  {/* {!connectedChannels.facebook ? ( */}
+                  <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
+                    <FiFacebook size={20} />
+                    <button className="text-red-500 font-bold">Connect</button>
+                  </a>
 
                   <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
                     <FiTwitter size={20} />

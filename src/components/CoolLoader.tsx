@@ -1,27 +1,30 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Logo } from "./Nav";
 
-interface Props {
-  autoLoad?: Boolean;
-}
-
-export default function CoolLoader({ autoLoad = true }: Props) {
+export default function CoolLoader() {
   const [loaderWidth, setLoaderWidth] = useState(0);
 
   useEffect(() => {
-    if (!autoLoad) return;
     const loaderTimer = setInterval(() => {
-      setLoaderWidth((prev) => (prev + 10 <= 100 ? prev + 10 : prev));
+      setLoaderWidth((prev) => {
+        const newLoaderWidth = prev + 10;
+        if (newLoaderWidth <= 100) {
+          return prev + 10;
+        }
+        return prev;
+      });
     }, 1000);
 
     return () => {
       clearInterval(loaderTimer);
     };
-  }, [autoLoad]);
+  }, []);
 
   return (
-    <div className="fixed bg-black h-full w-full flex flex-col items-center justify-center">
-      <div className="h-2 w-[15%] max-w-[600px] bg-gray-500">
+    <div className="fixed bg-white h-screen w-screen flex flex-col items-center justify-center z-10">
+      <Logo />
+      <div className="mt-5 h-2 w-[15%] max-w-[600px] bg-gray-200">
         <div style={{ width: loaderWidth + "%" }} className={`h-full bg-red-500`}></div>
       </div>
     </div>
