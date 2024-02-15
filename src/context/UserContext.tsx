@@ -3,6 +3,7 @@ import { PropsWithChildren, createContext, useEffect, useState } from "react";
 
 interface UserContextModel {
   isLoading: boolean;
+  setIsLoading: Function;
   user?: {
     id: string;
     email: string;
@@ -11,7 +12,11 @@ interface UserContextModel {
   setUser: Function;
 }
 
-export const UserContext = createContext<UserContextModel>({ isLoading: false, setUser: () => {} });
+export const UserContext = createContext<UserContextModel>({
+  isLoading: false,
+  setIsLoading: () => {},
+  setUser: () => {},
+});
 
 export function UserContextProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState();
@@ -29,5 +34,5 @@ export function UserContextProvider({ children }: PropsWithChildren) {
     })();
   }, []);
 
-  return <UserContext.Provider value={{ isLoading, user, setUser }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ isLoading, setIsLoading, user, setUser }}>{children}</UserContext.Provider>;
 }

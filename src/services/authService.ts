@@ -5,6 +5,14 @@ interface loginUserModel {
   password: string;
 }
 
+export async function logUserOut() {
+  const _ = await roboCreateAPIRequest({
+    endpoint: "users/session",
+    method: "delete",
+  });
+  return _;
+}
+
 export async function loginUser(body: loginUserModel) {
   const _ = await roboCreateAPIRequest({
     endpoint: "users/session",

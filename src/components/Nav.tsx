@@ -46,6 +46,7 @@ export default function Nav() {
           <div className="flex gap-2">
             {!user ? (
               <button
+                disabled={isLoading}
                 onClick={() => setShowLoginModal(true)}
                 className="font-bold border px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
               >
@@ -64,6 +65,7 @@ export default function Nav() {
 
                 {pathname === "/dashboard" && (
                   <button
+                    disabled={isLoading}
                     onClick={() => setShowUpgradeModal(true)}
                     className="font-bold border px-5 py-2 flex items-center gap-2 text-sm rounded-md bg-yellow-300 text-yellow-800"
                   >
@@ -73,6 +75,7 @@ export default function Nav() {
                 )}
 
                 <button
+                  disabled={isLoading}
                   onClick={logoutUser}
                   className="font-bold border px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
                 >

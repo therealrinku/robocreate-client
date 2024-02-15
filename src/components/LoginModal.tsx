@@ -2,31 +2,21 @@ import ModalWrapper from "./ModalWrapper";
 import { FormEvent, useState } from "react";
 import { loginUser } from "@/services/authService";
 import Logo from "./Logo";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   onClose: (params?: { loginSuccess: boolean }) => void;
 }
 
 export default function LoginModal({ onClose }: Props) {
+  const { isLoading, setupUser } = useUser();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
-    try {
-      const resp = await loginUser({ email, password });
-      if (resp.ok) {
-        alert("Login Successful");
-        onClose({ loginSuccess: true });
-      } else {
-        const error = JSON.parse(await resp.text());
-        alert(error.errorMessage);
-      }
-    } catch (err: any) {
-      console.log(err, "Err");
-      alert(err.message);
-    }
+    await setupUser({ email, password });
   }
 
   return (
@@ -57,7 +47,7 @@ export default function LoginModal({ onClose }: Props) {
 
         <button
           type="submit"
-          disabled={email.trim().length === 0 || password.trim().length === 0}
+          disabled={email.trim().length === 0 || password.trim().length === 0 || isLoading}
           className="border bg-red-500 py-2 text-white rounded-md text-sm font-bold w-full disabled:opacity-60"
         >
           Login
