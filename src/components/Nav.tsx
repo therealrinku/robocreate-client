@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
 import CoolLoader from "./CoolLoader";
 import { AiFillCrown } from "react-icons/ai";
+import UpgradeModal from "./UpgradeModal";
+import Logo from "./Logo";
 
 export default function Nav() {
   const router = useRouter();
@@ -14,6 +16,7 @@ export default function Nav() {
   const { isLoading, user, setupUser, logoutUser } = useUser();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   async function handleLoginModalClose(params?: { loginSuccess: boolean }) {
     if (params?.loginSuccess) {
@@ -61,7 +64,7 @@ export default function Nav() {
 
                 {pathname === "/dashboard" && (
                   <button
-                    onClick={() => setShowLoginModal(true)}
+                    onClick={() => setShowUpgradeModal(true)}
                     className="font-bold border px-5 py-2 flex items-center gap-2 text-sm rounded-md bg-yellow-300 text-yellow-800"
                   >
                     <AiFillCrown size={20} />
@@ -82,24 +85,8 @@ export default function Nav() {
       </nav>
 
       {showLoginModal && <LoginModal onClose={handleLoginModalClose} />}
+
+      {showUpgradeModal && <UpgradeModal onClose={() => setShowUpgradeModal(false)} />}
     </Fragment>
-  );
-}
-
-export function Logo() {
-  return (
-    <div className="flex items-center gap-2">
-      <img
-        className="h-9 w-9"
-        src="https://camo.githubusercontent.com/e9c1d8b7beb6f26cefc5ab0742b592df1abb0ceb398ee74c1ce33028460b3d9b/68747470733a2f2f63646e2d69636f6e732d706e672e666c617469636f6e2e636f6d2f3132382f31323433352f31323433353233342e706e67"
-      />
-
-      <div className="">
-        <p className="font-bold">Robocreate</p>
-        <p className="italic text-xs">
-          your new <span className="font-bold">social media manager</span>
-        </p>
-      </div>
-    </div>
   );
 }
