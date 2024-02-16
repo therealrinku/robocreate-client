@@ -2,12 +2,12 @@
 import CreatePostModal from "@/components/CreatePostModal";
 import DashboardTabs from "@/components/DashboardTabs";
 import { useUser } from "@/hooks/useUser";
-import { connectSocialMedia, getLatestPosts } from "@/services/connectionService";
+import { getLatestPosts } from "@/services/connectionService";
 import { Fragment, useEffect, useState } from "react";
-import { FiFacebook, FiInstagram, FiLink, FiPlus, FiShare, FiTwitter } from "react-icons/fi";
+import { FiFacebook, FiLink, FiPlus, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
-  const { user } = useUser();
+  const { user, removeUserSocialMediaConnection } = useUser();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [activeTab, setActiveTab] = useState("Create");
@@ -16,7 +16,7 @@ export default function FBDashboard() {
   const [connectedChannels, setConnectedChannels] = useState({ facebook: false });
 
   const [isLoading, setIsLoading] = useState(true);
-  const [latestPosts, setLatestPosts] = useState([]);
+  const [latestPosts, setLatestPosts] = useState({});
 
   useEffect(() => {
     const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
@@ -29,22 +29,31 @@ export default function FBDashboard() {
 
     (async function () {
       try {
-        if (!user) return;
-        setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
-        const connectionsArr = user && user.connections.split(",");
-
         setConnectedChannels((prev) => {
           return {
             ...prev,
-            facebook: connectionsArr?.includes("facebook"),
+            facebook: user?.connectedChannel?.connection_type === "facebook",
           };
         });
+
+        if (!user) return;
+        setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
       } catch (err) {
       } finally {
         setIsLoading(false);
       }
     })();
   }, [user, isLoading]);
+
+  async function handleDisconnect(connectionFor: string) {
+    await removeUserSocialMediaConnection(connectionFor);
+  }
+
+  useEffect(() => {
+    if (!user?.connectedChannel) {
+      setLatestPosts({});
+    }
+  }, [user?.connectedChannel]);
 
   return (
     <Fragment>
@@ -203,13 +212,15 @@ export default function FBDashboard() {
                       {!connectedChannels.facebook && <button className="text-red-500 font-bold">Connect</button>}
                     </a>
                   ) : (
-                    <button disabled className="flex items-center gap-2 border rounded-md p-2">
+                    <div className="flex items-center gap-2 border rounded-md p-2">
                       <FiFacebook size={20} />
 
                       <p className="font-bold">{user?.connectedChannel && user.connectedChannel.page_name}</p>
 
-                      {!connectedChannels.facebook && <button className="text-red-500 font-bold">Connect</button>}
-                    </button>
+                      <button onClick={() => handleDisconnect("facebook")} className="text-red-500 font-bold">
+                        Disconnect
+                      </button>
+                    </div>
                   )}
 
                   {/* <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
@@ -227,10 +238,12 @@ export default function FBDashboard() {
                   </button> */}
                 </div>
 
-                <p className="mt-5 text-xs text-red-500 italic">
-                  Note: only one facebook page can be connected at once, and there is no way to disconnect page now. You
-                  are trapped forever but don't worry that feature is coming soon ✨
-                </p>
+                {user?.connectedChannel && (
+                  <p className="mt-5 text-xs text-red-500 italic">
+                    Note: only one facebook page can be connected at once, so if you need to connect to another page,
+                    disconnect this one and connect another one, multi-page support coming soon ✨
+                  </p>
+                )}
               </div>
             )}
           </Fragment>

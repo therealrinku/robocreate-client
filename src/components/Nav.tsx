@@ -31,7 +31,7 @@ export default function Nav() {
 
   return (
     <Fragment>
-      <nav className="flex border-b items-center gap-2 py-5">
+      <nav className="bg-white rounded-md flex border-b items-center gap-2 py-5">
         <div className="flex  items-center justify-between w-[95%] max-w-[800px] mx-auto">
           <Logo />
 

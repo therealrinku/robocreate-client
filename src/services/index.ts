@@ -14,7 +14,8 @@ export async function roboCreateAPIRequest({
   params,
   body = undefined,
 }: roboCreateAPIRequestModel) {
-  const formattedParams = params ? new URLSearchParams(JSON.stringify(params)) : "";
+  //@ts-expect-error
+  const formattedParams = params ? new URLSearchParams(params) : "";
 
   const resp = await fetch(`${robocreateAPIBaseUrl}/${endpoint}${params ? `?${formattedParams}` : ``}`, {
     method: method,

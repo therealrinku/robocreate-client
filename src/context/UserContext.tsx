@@ -9,7 +9,6 @@ interface UserContextModel {
   user?: {
     id: string;
     email: string;
-    connections: string;
     connectedChannel: {
       connection_type: string;
       page_id: string;

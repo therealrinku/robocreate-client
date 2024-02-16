@@ -23,11 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} bg-[#f0f2f5] `}>
         <Providers>
-          <Nav />
-<NotificationPopup/>
-          <div className="max-w-[850px] min-h-[89vh] mx-auto border-l border-r">{children}</div>
+          <NotificationPopup />
+          <div className="my-5 pb-10 bg-white max-w-[850px] min-h-[80vh] mx-auto shadow-lg rounded-md">
+            <Nav />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>
