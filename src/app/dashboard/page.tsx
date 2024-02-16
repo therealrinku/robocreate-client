@@ -21,49 +21,53 @@ export default function FBDashboard() {
   const [latestPosts, setLatestPosts] = useState([]);
 
   useEffect(() => {
-    if (!user) {
-      router.push("/");
-    }
+    (async function () {
+      if (window) {
+        const hasAccessToken = window.location.href?.includes("access_token");
+        const token = hasAccessToken ? window.location.hash.split("&")[0].replace("#access_token=", "") : undefined;
+
+        if (token) {
+          setActiveTab("Channels");
+          await connectSocialMedia({ connectionFor: "facebook", token });
+          setConnectedChannels((prev) => {
+            return {
+              ...prev,
+              facebook: true,
+            };
+          });
+          router.push("/dashboard");
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
+    const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
+    setFBDialogPopupURI(fullURI);
+
+    // if (!isLoading && !user) {
+    //   router.push("/");
+    // }
 
     (async function () {
       try {
         if (!user) return;
         setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
-
         const connectionsArr = user && user.connections.split(",");
+
         setConnectedChannels((prev) => {
           return {
             ...prev,
             facebook: connectionsArr?.includes("facebook"),
           };
         });
-
-        if (window) {
-          const hasAccessToken = window.location.href?.includes("access_token");
-          const token = hasAccessToken ? window.location.hash.split("&")[0].replace("#access_token=", "") : undefined;
-
-          if (token) {
-            setActiveTab("Channels");
-            await connectSocialMedia({ connectionFor: "facebook", token });
-            setConnectedChannels((prev) => {
-              return {
-                ...prev,
-                facebook: true,
-              };
-            });
-            router.push("/dashboard");
-          }
-
-          const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
-          const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
-          setFBDialogPopupURI(fullURI);
-        }
       } catch (err) {
       } finally {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [user, isLoading]);
 
   return (
     <Fragment>
@@ -118,9 +122,17 @@ export default function FBDashboard() {
                 </div>
 
                 {/* @ts-expect-error */}
+                {!latestPosts.posts?.data && (
+                  <div className="text-center my-10">
+                    <p>Please connect the page to see it's recent posts here.</p>
+                    <button className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white">Connect ✨</button>
+                  </div>
+                )}
+
+                {/* @ts-expect-error */}
                 {latestPosts?.posts?.data?.map((post: any) => {
                   return (
-                    <div className="mt-5 border p-2 flex gap-2 rounded-md">
+                    <div key={post.id} className="mt-5 border p-2 flex gap-2 rounded-md">
                       <img className="h-20 w-20" src={post.full_picture} />
                       <div className="flex flex-col gap-2">
                         {/* <p>Enjoy your best holidays in srilanka this fall</p> */}
@@ -200,13 +212,23 @@ export default function FBDashboard() {
                 </div>
 
                 <div className="mt-5 flex flex-col gap-3">
-                  {/* {!connectedChannels.facebook ? ( */}
-                  <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
-                    <FiFacebook size={20} />
-                    <button className="text-red-500 font-bold">Connect</button>
-                  </a>
+                  {!connectedChannels.facebook ? (
+                    <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
+                      <FiFacebook size={20} />
 
-                  <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
+                      {!connectedChannels.facebook && <button className="text-red-500 font-bold">Connect</button>}
+                    </a>
+                  ) : (
+                    <button disabled className="flex items-center gap-2 border rounded-md p-2">
+                      <FiFacebook size={20} />
+
+                      <p className="font-bold">{user?.connectedChannel && user.connectedChannel.page_name}</p>
+
+                      {!connectedChannels.facebook && <button className="text-red-500 font-bold">Connect</button>}
+                    </button>
+                  )}
+
+                  {/* <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
                     <FiTwitter size={20} />
                     <button disabled className="font-bold">
                       Connect ✨
@@ -218,8 +240,13 @@ export default function FBDashboard() {
                     <button disabled className="font-bold">
                       Connect ✨
                     </button>
-                  </button>
+                  </button> */}
                 </div>
+
+                <p className="mt-5 text-xs text-red-500 italic">
+                  Note: only one facebook page can be connected at once, and there is no way to disconnect page now. You
+                  are trapped forever but don't worry that feature is coming soon ✨
+                </p>
               </div>
             )}
           </Fragment>

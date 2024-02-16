@@ -8,6 +8,11 @@ interface UserContextModel {
     id: string;
     email: string;
     connections: string;
+    connectedChannel: {
+      connection_type: string;
+      page_id: string;
+      page_name: string;
+    };
   };
   setUser: Function;
 }
