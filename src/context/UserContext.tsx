@@ -38,7 +38,9 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         const token = hasAccessToken ? window.location.hash.split("&")[0].replace("#access_token=", "") : undefined;
 
         if (token) {
-          await connectSocialMedia({ connectionFor: "facebook", token });
+          const respJson = await (await connectSocialMedia({ connectionFor: "facebook", token })).json();
+          //@ts-expect-error
+          setUser({ ...user, connectedChannel: respJson.connectionDetail });
           router.push("/dashboard");
         }
       }
