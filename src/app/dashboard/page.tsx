@@ -119,9 +119,11 @@ export default function FBDashboard() {
                       <div className="flex flex-col gap-2">
                         {/* <p>Enjoy your best holidays in srilanka this fall</p> */}
                         <div className="flex gap-3">
-                          <span className="flex items-center gap-2">
-                            <FiShare /> {post.shares.count}
-                          </span>
+                          {post.shares && (
+                            <span className="flex items-center gap-2">
+                              <FiShare /> {post.shares.count}
+                            </span>
+                          )}
                           <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
                             <FiLink />
                           </a>
