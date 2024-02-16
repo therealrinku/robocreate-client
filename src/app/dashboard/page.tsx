@@ -3,12 +3,10 @@ import CreatePostModal from "@/components/CreatePostModal";
 import DashboardTabs from "@/components/DashboardTabs";
 import { useUser } from "@/hooks/useUser";
 import { connectSocialMedia, getLatestPosts } from "@/services/connectionService";
-import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { FiFacebook, FiInstagram, FiLink, FiPlus, FiShare, FiTwitter } from "react-icons/fi";
 
 export default function FBDashboard() {
-  const router = useRouter();
   const { user } = useUser();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
@@ -21,29 +19,8 @@ export default function FBDashboard() {
   const [latestPosts, setLatestPosts] = useState([]);
 
   useEffect(() => {
-    (async function () {
-      if (window) {
-        const hasAccessToken = window.location.href?.includes("access_token");
-        const token = hasAccessToken ? window.location.hash.split("&")[0].replace("#access_token=", "") : undefined;
-
-        if (token) {
-          setActiveTab("Channels");
-          await connectSocialMedia({ connectionFor: "facebook", token });
-          setConnectedChannels((prev) => {
-            return {
-              ...prev,
-              facebook: true,
-            };
-          });
-          router.push("/dashboard");
-        }
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
     const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
-    const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.href}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
+    const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.origin}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
     setFBDialogPopupURI(fullURI);
 
     // if (!isLoading && !user) {

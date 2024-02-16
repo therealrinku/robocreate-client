@@ -1,4 +1,6 @@
 import { getMe } from "@/services/authService";
+import { connectSocialMedia } from "@/services/connectionService";
+import { useRouter } from "next/router";
 import { PropsWithChildren, createContext, useEffect, useState } from "react";
 
 interface UserContextModel {
@@ -26,6 +28,22 @@ export const UserContext = createContext<UserContextModel>({
 export function UserContextProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    (async function () {
+      if (window) {
+        const hasAccessToken = window.location.href?.includes("access_token");
+        const token = hasAccessToken ? window.location.hash.split("&")[0].replace("#access_token=", "") : undefined;
+
+        if (token) {
+          await connectSocialMedia({ connectionFor: "facebook", token });
+          router.push("/dashboard");
+        }
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     (async function () {
