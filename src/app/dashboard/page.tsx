@@ -125,7 +125,12 @@ export default function FBDashboard() {
                 {!latestPosts?.posts?.data && (
                   <div className="text-center my-10">
                     <p>Please connect the page to see it's recent posts here.</p>
-                    <button className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white">Connect ✨</button>
+                    <button
+                      onClick={() => setActiveTab("Channels")}
+                      className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
+                    >
+                      Connect ✨
+                    </button>
                   </div>
                 )}
 
