@@ -1,6 +1,6 @@
 import { getMe } from "@/services/authService";
 import { connectSocialMedia } from "@/services/connectionService";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { PropsWithChildren, createContext, useEffect, useState } from "react";
 
 interface UserContextModel {
