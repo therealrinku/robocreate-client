@@ -102,9 +102,13 @@ export default function FBDashboard() {
               <div className="px-5 mt-10 text-sm ">
                 <div className="flex justify-between">
                   <p className="font-bold">Recent Posts</p>
-                  <button className="border px-2 py-1 rounded-md flex items-center gap-2">
+                  {/* <button
+                    disabled
+                    className="bg-red-500 text-sm text-white px-2 py-1 rounded-md flex items-center gap-2"
+                  >
                     <FiPlus size={20} />
-                  </button>
+                   ✨
+                  </button> */}
                 </div>
 
                 {/* @ts-expect-error */}
@@ -120,36 +124,38 @@ export default function FBDashboard() {
                   </div>
                 )}
 
-                {/* @ts-expect-error */}
-                {latestPosts?.posts?.data?.map((post: any) => {
-                  return (
-                    <div key={post.id} className="mt-5 border p-2 flex gap-2 rounded-md">
-                      <img className="h-20 w-20" src={post.full_picture} />
-                      <div className="flex flex-col gap-2">
-                        {/* <p>Enjoy your best holidays in srilanka this fall</p> */}
-                        <div className="flex gap-3">
-                          {post.shares && (
-                            <span className="flex items-center gap-2">
-                              <FiShare /> {post.shares.count}
-                            </span>
-                          )}
-                          <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
-                            <FiLink />
-                          </a>
-                          {/* <span className="flex items-center gap-2">
+                <div className="h-[60vh] pr-5 overflow-y-auto mt-5 flex flex-col gap-5">
+                  {/* @ts-expect-error */}
+                  {latestPosts?.posts?.data?.map((post: any) => {
+                    return (
+                      <div key={post.id} className="border p-2 flex gap-2 rounded-md">
+                        <img className="h-20 w-20" src={post.full_picture} />
+                        <div className="flex flex-col gap-2">
+                          {/* <p>Enjoy your best holidays in srilanka this fall</p> */}
+                          <div className="flex gap-3">
+                            {post.shares && (
+                              <span className="flex items-center gap-2">
+                                <FiShare /> {post.shares.count}
+                              </span>
+                            )}
+                            <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
+                              <FiLink />
+                            </a>
+                            {/* <span className="flex items-center gap-2">
                         <FiThumbsUp /> 144
                       </span> */}
-                          {/* <span className="flex items-center gap-2">
+                            {/* <span className="flex items-center gap-2">
                         <FiMessageCircle /> 20
                       </span> */}
-                        </div>
-                        {/* <p className="flex items-center gap-2">
+                          </div>
+                          {/* <p className="flex items-center gap-2">
                       <FiClock /> 3 mins ago
                     </p> */}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
 
                 {/* <div className="mt-5 border p-2 flex gap-2 rounded-md">
                   <img

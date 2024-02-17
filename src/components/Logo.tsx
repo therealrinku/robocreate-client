@@ -11,7 +11,7 @@ export default function Logo({ logoOnly }: Props) {
       />
 
       {!logoOnly && (
-        <div className="">
+        <div className="hidden lg:block">
           <p className="font-bold">Robocreate</p>
           <p className="italic text-xs">
             your new <span className="font-bold">social media manager</span>

@@ -20,13 +20,13 @@ export default function DashboardTabs({ activeTab, setActiveTab }: Props) {
         Channels
       </button>
 
-      <button
+      {/* <button
         disabled
         className={`border-r h-full disabled:bg-gray-100 flex items-center px-10 ${activeTab !== "Analytics" && "border-b"}`}
         onClick={() => setActiveTab("Analytics")}
       >
         Analytics✨
-      </button>
+      </button> */}
 
       {/* dummy line */}
       <div className="border-b w-full h-full" />
