@@ -1,16 +1,23 @@
+import { useUser } from "@/hooks/useUser";
 import { useEffect, useState } from "react";
-import { FiSend, FiX } from "react-icons/fi";
+import { FiLoader, FiSend, FiX } from "react-icons/fi";
+import { createNewPost } from "@/services/connectionService";
+import { useNotification } from "@/hooks/useNotification";
 
 interface Props {
   onClose: () => void;
 }
 
 export default function CreatePostModal({ onClose }: Props) {
+  const { user } = useUser();
+  const { addNotification } = useNotification();
+
   const [message, setMessage] = useState("");
   const [postNow, setPostNow] = useState("yes");
   const [selectedPublishTimestamp, setSelectedPublishTimestamp] = useState<number>(Date.now());
 
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handlePost() {
     //dont' allow past date
@@ -21,17 +28,22 @@ export default function CreatePostModal({ onClose }: Props) {
     }
 
     try {
-      // await createFBPost({
-      //   publishNow: postNow === "yes",
-      //   publishTimestamp: selectedPublishTimestamp,
-      //   message,
-      //   //@ts-expect-error
-      //   selectedPage: FBConnection?.accounts.data[selectedPageIndex],
-      // });
+      setIsLoading(true);
+      await createNewPost(
+        { connectionFor: "facebook" },
+        {
+          message: message,
+          published: true,
+        }
+      );
 
       setMessage("");
+      addNotification("Post created successfully!");
+      onClose();
     } catch (err: any) {
-      alert(err.message);
+      addNotification(err.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -58,40 +70,40 @@ export default function CreatePostModal({ onClose }: Props) {
       {/* This is a backdrop */}
       <div
         onClick={onClose}
-        style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         className="fixed w-screen h-screen top-0 left-0"
       />
 
-      <div className="bg-black relative h-full w-full max-w-[500px] flex flex-col items-center justify-center">
-        <button onClick={onClose} className="absolute top-10 right-10">
+      <div className="relative bg-white shadow-md border min-w-[300px] max-w-[800px] px-5 py-7 flex flex-col items-center gap-5 rounded-md">
+        <button onClick={onClose} className="absolute top-4 right-4">
           <FiX size={20} />
         </button>
 
-        <div>
-          <select
-            value={selectedPageIndex}
-            onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
-            className="bg-black border p-1 text-xs outline-none"
-          >
-            {/* {FBConnection?.accounts?.data?.map((account, i) => {
-              return (
-                <option key={account.id} value={i}>
-                  {account.name}
-                </option>
-              );
-            })} */}
-          </select>
+        <p className="font-bold">Create Post</p>
 
-          <div className="mt-2 flex items-center gap-2">
+        <div className="mt-5">
+          <div className="flex items-center gap-2">
+            <select
+              value={selectedPageIndex}
+              onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
+              className="bg-inherit max-w-24 truncate border p-2 text-xs outline-none"
+            >
+              <option value={user?.connectedChannel.page_id}>{user?.connectedChannel.page_name}</option>
+            </select>
+
             <select
               value={postNow}
               onChange={(e) => setPostNow(e.target.value)}
-              className="bg-black border p-2 text-xs outline-none"
+              className="bg-inherit max-w-24 truncate border p-2 text-xs outline-none"
             >
               <option value="yes">Post now</option>
-              <option value="no">Schedule</option>
+              <option disabled value="no">
+                Schedule ✨
+              </option>
             </select>
+          </div>
 
+          <div className="flex items-center gap-2">
             {postNow === "no" && (
               <input
                 onChange={(e) => handleChangeDate(e.target.value)}
@@ -104,17 +116,17 @@ export default function CreatePostModal({ onClose }: Props) {
           <div className="flex items-center gap-5 mt-10">
             <input
               placeholder="Post Text....."
-              className="bg-inherit border-b p-2 outline-none text-sm"
+              className="bg-inherit border-b pt-2 outline-none text-sm"
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
             <button
-              // disabled={!message.trim() || isLoading}
+              disabled={!message.trim() || isLoading}
               className="mt-5 underline disabled:opacity-50"
               onClick={handlePost}
             >
-              {/* {isLoading ? "..." : <FiSend />} */}
+              {isLoading ? <FiLoader color="blue" /> : <FiSend />}
             </button>
           </div>
         </div>

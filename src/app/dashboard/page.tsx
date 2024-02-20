@@ -18,6 +18,10 @@ export default function FBDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [latestPosts, setLatestPosts] = useState({});
 
+  async function loadLatestPosts() {
+    setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
+  }
+
   useEffect(() => {
     const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
     const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.origin}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
@@ -37,7 +41,7 @@ export default function FBDashboard() {
         });
 
         if (!user) return;
-        setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
+        loadLatestPosts();
       } catch (err) {
       } finally {
         setIsLoading(false);
@@ -62,53 +66,18 @@ export default function FBDashboard() {
 
         {isLoading && <p className="mt-10 m-5 text-sm text-center">Loading....</p>}
 
-        {/* <div className="flex items-center pb-10 flex-col gap-3 mb-5">
-          <p className="font-bold">Active FB Connections ({FBConnection?.accounts?.data?.length})</p>
-          {hasFBConnection &&
-            FBConnection?.accounts?.data?.map((account) => {
-              return (
-                <p className="border w-full p-2 justify-center flex items-center gap-2">
-                  <FaFacebook />
-                  <span className="text-sm">{account.name}</span>
-                </p>
-              );
-            })}
-
-          <div className="flex items-center gap-2 border-t mt-5 pt-5">
-            <button
-              className="flex items-center gap-2 border  px-3 py-2  text-sm hover:bg-green-800 hover:border-green-800"
-              onClick={() => setShowCreatePostModal(true)}
-            >
-              <FiPenTool />
-              Create Post
-            </button>
-
-            <button
-              className="flex items-center gap-2 border-red-500 bg-red-500 hover:bg-red-800 hover:border-red-800 py-2 px-3 text-sm"
-              onClick={() => {
-                destroyFBConnection();
-                router.push("/");
-              }}
-            >
-              <BsFillPlugFill size={16} />
-              Disconnect
-            </button>
-          </div>
-        </div> */}
-
         {!isLoading && (
           <Fragment>
             {activeTab === "Create" && (
               <div className="px-5 mt-10 text-sm ">
                 <div className="flex justify-between">
                   <p className="font-bold">Recent Posts</p>
-                  {/* <button
-                    disabled
+                  <button
+                    onClick={() => setShowCreatePostModal(true)}
                     className="bg-red-500 text-sm text-white px-2 py-1 rounded-md flex items-center gap-2"
                   >
-                    <FiPlus size={20} />
-                   ✨
-                  </button> */}
+                    <FiPlus size={20} /> Create Post
+                  </button>
                 </div>
 
                 {/* @ts-expect-error */}
@@ -156,48 +125,6 @@ export default function FBDashboard() {
                     );
                   })}
                 </div>
-
-                {/* <div className="mt-5 border p-2 flex gap-2 rounded-md">
-                  <img
-                    className="h-20 w-20"
-                    src="https://images.unsplash.com/photo-1706463661223-4e7007549823?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1MHx8fGVufDB8fHx8fA%3D%3D"
-                  />
-                  <div className="flex flex-col gap-2">
-                    <p>Enjoy your best holidays in srilanka this fall</p>
-                    <div className="flex gap-3">
-                      <span className="flex items-center gap-2">
-                        <FiThumbsUp /> 144
-                      </span>
-                      <span className="flex items-center gap-2">
-                        <FiMessageCircle /> 20
-                      </span>
-                    </div>
-                    <p className="flex items-center gap-2">
-                      <FiClock /> 3 mins ago
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-5 border p-2 flex gap-2 rounded-md">
-                  <img
-                    className="h-20 w-20"
-                    src="https://images.unsplash.com/photo-1707438587276-2828a4576c52?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNzB8fHxlbnwwfHx8fHw%3D"
-                  />
-                  <div className="flex flex-col gap-2">
-                    <p>Buy Brand New Buggati</p>
-                    <div className="flex gap-3">
-                      <span className="flex items-center gap-2">
-                        <FiThumbsUp /> 1.9k
-                      </span>
-                      <span className="flex items-center gap-2">
-                        <FiMessageCircle /> 249
-                      </span>
-                    </div>
-                    <p className="flex items-center gap-2">
-                      <FiClock /> 39 mins ago
-                    </p>
-                  </div>
-                </div> */}
               </div>
             )}
 
@@ -205,9 +132,6 @@ export default function FBDashboard() {
               <div className="px-5 mt-10 text-sm ">
                 <div className="flex justify-between">
                   <p className="font-bold">Connected Channels</p>
-                  <button className="border px-2 py-1 rounded-md flex items-center gap-2">
-                    <FiPlus size={20} />
-                  </button>
                 </div>
 
                 <div className="mt-5 flex flex-col gap-3">
@@ -256,7 +180,14 @@ export default function FBDashboard() {
         )}
       </div>
 
-      {showCreatePostModal && <CreatePostModal onClose={() => setShowCreatePostModal(false)} />}
+      {showCreatePostModal && (
+        <CreatePostModal
+          onClose={async () => {
+            setShowCreatePostModal(false);
+            await loadLatestPosts();
+          }}
+        />
+      )}
     </Fragment>
   );
 }
