@@ -24,7 +24,7 @@ export default function ConnectionsModal({ onClose }: Props) {
         facebook: user?.connectedChannel?.connection_type === "facebook",
       };
     });
-  }, []);
+  }, [user?.connectedChannel]);
 
   return (
     <ModalWrapper onClose={onClose}>

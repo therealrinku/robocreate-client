@@ -73,7 +73,7 @@ export default function FBDashboard() {
                 </div> */}
 
                 {/* @ts-expect-error */}
-                {!latestPosts?.posts?.data && postsLoaded && (
+                {!latestPosts?.posts?.data && postsLoaded && !isLoading && (
                   <div className="text-center my-10 bg-gray-200 h-48 flex flex-col items-center justify-center px-5 rounded-md">
                     <p className="text-md">Please connect the channel to see it's recent posts here :)</p>
                     <button
@@ -173,6 +173,7 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
             )}
 
             <button
+              disabled={!user?.connectedChannel}
               className="flex items-center gap-2 text-sm border-l h-full pl-2"
               onClick={() => setShowCreatePostModal(true)}
             >
