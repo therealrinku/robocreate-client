@@ -44,11 +44,26 @@ export default function LoginModal({ onClose }: Props) {
 
   return (
     <ModalWrapper onClose={onClose}>
-      <form
-        onSubmit={handleSubmit}
-        className="relative bg-white shadow-md border min-w-[300px] max-w-[800px] px-5 py-7 flex flex-col items-center gap-5 rounded-md"
-      >
-        <Logo logoOnly />
+      <div className="flex justify-between mb-5">
+        <p className="font-bold">Continue to create with Robocreate</p>
+      </div>
+      
+      <div className="flex items-center gap-5 mb-5">
+        <button
+          className={!isSignup ? "bg-red-500 px-3 py-1 text-white rounded-md" : ""}
+          onClick={() => setIsSignup(false)}
+        >
+          Login
+        </button>
+        <button
+          className={isSignup ? "bg-red-500 px-3 py-1 text-white rounded-md" : ""}
+          onClick={() => setIsSignup(true)}
+        >
+          Signup
+        </button>
+      </div>
+
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <input
           type="text"
           value={email}
@@ -77,21 +92,12 @@ export default function LoginModal({ onClose }: Props) {
           />
         )}
 
-        <div className="flex items-center gap-2 text-sm">
-          <input name="new-checkbox" type="checkbox" onChange={() => setIsSignup((prev) => !prev)} />
-          <label htmlFor="new-checkbox">New to Robocreate ?</label>
-        </div>
-
         <button
           type="submit"
           disabled={isSubmitButtonDisabled}
           className="border bg-red-500 py-2 text-white rounded-md text-sm font-bold w-full disabled:opacity-60"
         >
           {isSignup ? "Signup & Continue" : "Login"}
-        </button>
-
-        <button type="button" onClick={() => onClose()} className="text-xs underline">
-          Cancel
         </button>
       </form>
     </ModalWrapper>

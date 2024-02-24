@@ -1,8 +1,9 @@
 interface Props {
   logoOnly?: boolean;
+  noSubtitle?: boolean;
 }
 
-export default function Logo({ logoOnly }: Props) {
+export default function Logo({ logoOnly, noSubtitle }: Props) {
   return (
     <div className="flex items-center gap-2">
       <img
@@ -13,9 +14,12 @@ export default function Logo({ logoOnly }: Props) {
       {!logoOnly && (
         <div className="hidden lg:block">
           <p className="font-bold">Robocreate</p>
-          <p className="italic text-xs">
-            your new <span className="font-bold">social media manager</span>
-          </p>
+
+          {!noSubtitle && (
+            <p className="italic text-xs">
+              your new <span className="font-bold">social media manager</span>
+            </p>
+          )}
         </div>
       )}
     </div>

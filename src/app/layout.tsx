@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Nav from "@/components/Nav";
 import NotificationPopup from "@/components/NotificationPopup";
 
-const inter = Inter({ subsets: ["latin"] });
+const openSans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Robocreate",
@@ -23,13 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white lg:bg-[#f0f2f5] `}>
+      <body className={`${openSans.className} bg-white  `}>
         <Providers>
           <NotificationPopup />
-          <div className="mt-0 lg:mt-5 pb-10 bg-white max-w-[850px] min-h-[94vh] mx-auto lg:shadow-lg rounded-md">
-            <Nav />
+          {/* <div className="mt-0 lg:mt-5 pb-10 bg-white max-w-[850px] min-h-[94vh] mx-auto lg:shadow-lg rounded-md"> */}
+            {/* <Nav /> */}
             {children}
-          </div>
+          {/* </div> */}
         </Providers>
       </body>
     </html>

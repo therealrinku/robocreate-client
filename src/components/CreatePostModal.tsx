@@ -1,6 +1,5 @@
 import { useUser } from "@/hooks/useUser";
 import { useEffect, useState } from "react";
-import { FiLoader, FiSend, FiX } from "react-icons/fi";
 import { createNewPost } from "@/services/connectionService";
 import { useNotification } from "@/hooks/useNotification";
 import ModalWrapper from "./ModalWrapper";
@@ -68,62 +67,54 @@ export default function CreatePostModal({ onClose }: Props) {
 
   return (
     <ModalWrapper onClose={onClose}>
-      <main className="fixed  left-0 top-0 flex items-center justify-center w-screen h-screen">
-        <div className="relative bg-white shadow-md border min-w-[300px] max-w-[800px] px-5 py-7 flex flex-col items-center gap-5 rounded-md">
-          <button onClick={onClose} className="absolute top-4 right-4">
-            <FiX size={20} />
-          </button>
-
+      <main>
+        <div className="flex justify-between">
           <p className="font-bold">Create Post</p>
+        </div>
 
-          <div className="mt-5">
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedPageIndex}
-                onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
-                className="bg-inherit max-w-24 truncate border p-2 text-xs outline-none"
-              >
-                <option value={user?.connectedChannel.page_id}>{user?.connectedChannel.page_name}</option>
-              </select>
+        <div className="mt-5 w-full">
+          <div className="flex items-center gap-2">
+            <select
+              value={selectedPageIndex}
+              onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
+              className="bg-inherit max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded-md"
+            >
+              <option value={user?.connectedChannel?.page_id}>{user?.connectedChannel?.page_name}</option>
+            </select>
 
-              <select
-                value={postNow}
-                onChange={(e) => setPostNow(e.target.value)}
-                className="bg-inherit max-w-24 truncate border p-2 text-xs outline-none"
-              >
-                <option value="yes">Post now</option>
-                <option disabled value="no">
-                  Schedule ✨
-                </option>
-              </select>
-            </div>
+            <select
+              value={postNow}
+              onChange={(e) => setPostNow(e.target.value)}
+              className="bg-inherit text-black max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded-md"
+            >
+              <option value="yes">Post now</option>
+              <option disabled value="no">
+                Schedule ✨
+              </option>
+            </select>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {postNow === "no" && (
-                <input
-                  onChange={(e) => handleChangeDate(e.target.value)}
-                  className="bg-inherit border p-2 text-xs outline-none"
-                  type="datetime-local"
-                />
-              )}
-            </div>
-
-            <div className="flex items-center gap-5 mt-10">
+          <div className="flex items-center gap-2">
+            {postNow === "no" && (
               <input
-                placeholder="Post Text....."
-                className="bg-inherit border-b pt-2 outline-none text-sm"
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => handleChangeDate(e.target.value)}
+                className="bg-inherit border p-2 text-xs outline-none"
+                type="datetime-local"
               />
-              <button
-                disabled={!message.trim() || isLoading}
-                className="mt-5 underline disabled:opacity-50"
-                onClick={handlePost}
-              >
-                {isLoading ? <FiLoader color="blue" /> : <FiSend />}
-              </button>
-            </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-5 mt-10 w-full">
+            <input
+              placeholder="Post Text....."
+              className="bg-inherit rounded-md focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <button disabled={!message.trim() || isLoading} className="disabled:opacity-50" onClick={handlePost}>
+              {isLoading ? "posting...." : "post"}
+            </button>
           </div>
         </div>
       </main>

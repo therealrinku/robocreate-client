@@ -1,19 +1,19 @@
 "use client";
+import ConnectionsModal from "@/components/ConnectionsModal";
 import CreatePostModal from "@/components/CreatePostModal";
-import DashboardTabs from "@/components/DashboardTabs";
+import Logo from "@/components/Logo";
 import { useUser } from "@/hooks/useUser";
 import { getLatestPosts } from "@/services/connectionService";
 import { Fragment, useEffect, useState } from "react";
-import { FiFacebook, FiLink, FiPlus, FiShare } from "react-icons/fi";
+import { FiDatabase, FiEdit, FiLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
-  const { user, removeUserSocialMediaConnection } = useUser();
+  const { user } = useUser();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("Create");
+  const [showConnectionsModal, setShowConnectionsModal] = useState(false);
 
-  const [fbDialogPopupURI, setFBDialogPopupURI] = useState("");
-  const [connectedChannels, setConnectedChannels] = useState({ facebook: false });
+  const [activeTab, setActiveTab] = useState("recent-posts");
 
   const [isLoading, setIsLoading] = useState(true);
   const [latestPosts, setLatestPosts] = useState({});
@@ -23,23 +23,12 @@ export default function FBDashboard() {
   }
 
   useEffect(() => {
-    const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
-    const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.origin}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
-    setFBDialogPopupURI(fullURI);
-
     // if (!isLoading && !user) {
     //   router.push("/");
     // }
 
     (async function () {
       try {
-        setConnectedChannels((prev) => {
-          return {
-            ...prev,
-            facebook: user?.connectedChannel?.connection_type === "facebook",
-          };
-        });
-
         if (!user) return;
         loadLatestPosts();
       } catch (err) {
@@ -49,10 +38,6 @@ export default function FBDashboard() {
     })();
   }, [user, isLoading]);
 
-  async function handleDisconnect(connectionFor: string) {
-    await removeUserSocialMediaConnection(connectionFor);
-  }
-
   useEffect(() => {
     if (!user?.connectedChannel) {
       setLatestPosts({});
@@ -61,16 +46,21 @@ export default function FBDashboard() {
 
   return (
     <Fragment>
-      <div className="flex flex-col">
-        <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      <DashboardTop
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        setShowConnectionsModal={setShowConnectionsModal}
+        setShowCreatePostModal={setShowCreatePostModal}
+      />
 
+      <div className="flex flex-col">
         {isLoading && <p className="mt-10 m-5 text-sm text-center">Loading....</p>}
 
         {!isLoading && (
           <Fragment>
-            {activeTab === "Create" && (
-              <div className="px-5 mt-10 text-sm ">
-                <div className="flex justify-between">
+            {activeTab === "recent-posts" && (
+              <div className=" mt-5 text-sm ">
+                {/* <div className="flex justify-between">
                   <p className="font-bold">Recent Posts</p>
                   <button
                     onClick={() => setShowCreatePostModal(true)}
@@ -78,12 +68,12 @@ export default function FBDashboard() {
                   >
                     <FiPlus size={20} /> Create Post
                   </button>
-                </div>
+                </div> */}
 
                 {/* @ts-expect-error */}
                 {!latestPosts?.posts?.data && (
-                  <div className="text-center my-10">
-                    <p>Please connect the page to see it's recent posts here.</p>
+                  <div className="text-center my-10 bg-gray-200 h-48 flex flex-col items-center justify-center px-5 rounded-md">
+                    <p className="text-md">Please connect the channel to see it's recent posts here :)</p>
                     <button
                       onClick={() => setActiveTab("Channels")}
                       className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
@@ -93,14 +83,24 @@ export default function FBDashboard() {
                   </div>
                 )}
 
-                <div className="h-[60vh] pr-5 overflow-y-auto mt-5 flex flex-col gap-5">
+                <div className="pr-5 my-5 flex flex-col gap-5">
                   {/* @ts-expect-error */}
                   {latestPosts?.posts?.data?.map((post: any) => {
                     return (
-                      <div key={post.id} className="border p-2 flex gap-2 rounded-md">
-                        <img className="h-20 w-20" src={post.full_picture} />
+                      <div
+                        key={post.id}
+                        className="border flex flex-col p-2 flex gap-2 rounded-md shadow w-full max-w-[400px]"
+                      >
+                        <p className="font-bold italic">
+                          {user?.connectedChannel?.page_name} at {new Date(post.created_time).toDateString()}{" "}
+                        </p>
+                        {post.full_picture ? (
+                          <img className="w-full my-10" src={post.full_picture} />
+                        ) : (
+                          <p className="my-10">{post.message}</p>
+                        )}
+
                         <div className="flex flex-col gap-2">
-                          {/* <p>Enjoy your best holidays in srilanka this fall</p> */}
                           <div className="flex gap-3">
                             {post.shares && (
                               <span className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export default function FBDashboard() {
                               </span>
                             )}
                             <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
-                              <FiLink />
+                              <FiLink /> Link
                             </a>
                             {/* <span className="flex items-center gap-2">
                         <FiThumbsUp /> 144
@@ -127,55 +127,6 @@ export default function FBDashboard() {
                 </div>
               </div>
             )}
-
-            {activeTab === "Channels" && (
-              <div className="px-5 mt-10 text-sm ">
-                <div className="flex justify-between">
-                  <p className="font-bold">Connected Channels</p>
-                </div>
-
-                <div className="mt-5 flex flex-col gap-3">
-                  {!connectedChannels.facebook ? (
-                    <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
-                      <FiFacebook size={20} />
-
-                      {!connectedChannels.facebook && <button className="text-red-500 font-bold">Connect</button>}
-                    </a>
-                  ) : (
-                    <div className="flex items-center gap-2 border rounded-md p-2">
-                      <FiFacebook size={20} />
-
-                      <p className="font-bold">{user?.connectedChannel && user.connectedChannel.page_name}</p>
-
-                      <button onClick={() => handleDisconnect("facebook")} className="text-red-500 font-bold">
-                        Disconnect
-                      </button>
-                    </div>
-                  )}
-
-                  {/* <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
-                    <FiTwitter size={20} />
-                    <button disabled className="font-bold">
-                      Connect ✨
-                    </button>
-                  </button>
-
-                  <button disabled className="flex items-center gap-2 p-2 border rounded-md  disabled:bg-gray-300">
-                    <FiInstagram size={20} />
-                    <button disabled className="font-bold">
-                      Connect ✨
-                    </button>
-                  </button> */}
-                </div>
-
-                {user?.connectedChannel && (
-                  <p className="mt-5 text-xs text-red-500 italic">
-                    Note: only one facebook page can be connected at once, so if you need to connect to another page,
-                    disconnect this one and connect another one, multi-page support coming soon ✨
-                  </p>
-                )}
-              </div>
-            )}
           </Fragment>
         )}
       </div>
@@ -188,6 +139,72 @@ export default function FBDashboard() {
           }}
         />
       )}
+
+      {showConnectionsModal && <ConnectionsModal onClose={() => setShowConnectionsModal(false)} />}
     </Fragment>
+  );
+}
+
+interface DashboardTopProps {
+  activeTab: string;
+  setActiveTab: Function;
+  setShowConnectionsModal: Function;
+  setShowCreatePostModal: Function;
+}
+
+function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setShowCreatePostModal }: DashboardTopProps) {
+  const { user, logoutUser } = useUser();
+
+  return (
+    <div className="bg-white fixed top-0 left-0 w-full border-b py-2 flex flex-col items-center justify-center">
+      <div className="max-w-[900px] w-full mx-auto">
+        <Logo noSubtitle={true} />
+
+        <div className="mt-4 ml-2 flex items-center gap-7 w-full">
+          <div className="flex items-center border rounded-md h-8 gap-3 px-2">
+            {user?.connectedChannel ? (
+              <select className="bg-inherit text-sm pr-6 outline-none truncate font-bold">
+                <option className="font-bold">{user?.connectedChannel?.page_name}</option>
+              </select>
+            ) : (
+              <p className="text-sm">Connect your first channel</p>
+            )}
+
+            <button
+              className="flex items-center gap-2 text-sm border-l h-full pl-2"
+              onClick={() => setShowCreatePostModal(true)}
+            >
+              <FiPlus /> Create
+            </button>
+
+            <button onClick={() => setShowConnectionsModal(true)} className="border-l h-full pl-2">
+              <FiSettings />
+            </button>
+          </div>
+
+          <button
+            className={`flex items-center gap-2 text-sm ${activeTab === "recent-posts" && "text-red-500 font-bold"}  `}
+            onClick={() => setActiveTab("recent-posts")}
+          >
+            <FiDatabase /> Recent Posts
+          </button>
+
+          {/* analytics is coming soon baby */}
+          {/* <button disabled className="flex items-center gap-2 text-sm">
+        <FiPieChart /> Analytics
+      </button> */}
+
+          <div className="ml-auto flex items-center gap-4">
+            <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
+              {user?.email?.slice(0, 1).toUpperCase()}
+            </span>
+
+            <button onClick={logoutUser} className="flex items-center gap-2 text-sm">
+              <FiLogOut /> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
