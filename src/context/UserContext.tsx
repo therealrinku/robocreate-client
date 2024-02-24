@@ -47,7 +47,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         if (token) {
           const respJson = await (await connectSocialMedia({ connectionFor: "facebook", token })).json();
           //@ts-expect-error
-          setUser({ ...user, connections: [...user.connections, respJson.connectionDetail] });
+          setUser({ ...user, connections: [...(user?.connections ?? []), respJson.connectionDetail] });
           router.push("/dashboard");
         }
       }

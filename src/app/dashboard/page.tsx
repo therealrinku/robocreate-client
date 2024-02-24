@@ -45,7 +45,7 @@ export default function FBDashboard() {
         setPostsLoaded(true);
       }
     })();
-  }, [user, isLoading]);
+  }, [user, isLoading, selectedConnectionIndex]);
 
   // useEffect(() => {
   //   if (!user?.connectedChannel) {
