@@ -77,7 +77,7 @@ export default function FBDashboard() {
                   <div className="text-center my-10 bg-gray-200 h-48 flex flex-col items-center justify-center px-5 rounded-md">
                     <p className="text-md">Please connect the channel to see it's recent posts here :)</p>
                     <button
-                      onClick={() => setActiveTab("Channels")}
+                      onClick={() => setShowConnectionsModal(true)}
                       className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
                     >
                       Connect ✨
