@@ -87,7 +87,7 @@ export default function LoginModal({ onClose }: Props) {
           disabled={isSubmitButtonDisabled}
           className="border bg-red-500 py-2 text-white rounded-md text-sm font-bold w-full disabled:opacity-60"
         >
-          {isSignup ? "Signup" : "Login"}
+          {isSignup ? "Signup & Continue" : "Login"}
         </button>
 
         <button type="button" onClick={() => onClose()} className="text-xs underline">
