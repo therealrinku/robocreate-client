@@ -13,6 +13,15 @@ export async function logUserOut() {
   return _;
 }
 
+export async function createUserAccount(body: loginUserModel) {
+  const _ = await roboCreateAPIRequest({
+    endpoint: "users/create-account",
+    body: body,
+    method: "post",
+  });
+  return _;
+}
+
 export async function loginUser(body: loginUserModel) {
   const _ = await roboCreateAPIRequest({
     endpoint: "users/session",

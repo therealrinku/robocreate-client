@@ -1,5 +1,5 @@
 import { UserContext } from "@/context/UserContext";
-import { getMe, logUserOut, loginUser } from "@/services/authService";
+import { createUserAccount, getMe, logUserOut, loginUser } from "@/services/authService";
 import { useContext } from "react";
 import { useNotification } from "./useNotification";
 import { useRouter } from "next/navigation";
@@ -20,11 +20,16 @@ export function useUser() {
     }
   }
 
-  async function setupUser(props: { email: string; password: string }) {
+  async function setupUser(props: { email: string; password: string; isSignup: boolean }) {
     setIsLoading(true);
 
     try {
-      await loginUser({ email: props.email, password: props.password });
+      if (props.isSignup) {
+        await createUserAccount({ email: props.email, password: props.password });
+      } else {
+        await loginUser({ email: props.email, password: props.password });
+      }
+
       //get the user
       const userResp = await getMe();
       setUser(await userResp.json());
