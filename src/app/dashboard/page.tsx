@@ -46,6 +46,26 @@ export default function FBDashboard() {
     }
   }, [user?.connectedChannel]);
 
+  const [emptyStateImgUrl, setEmptyStateImgUrl] = useState<string | null>(null);
+  
+  useEffect(() => {
+    (async function () {
+      if (!postsLoaded || isLoading) {
+        return;
+      }
+
+      const resp = await (
+        await fetch("https://robojson.vercel.app/api/data/", {
+          headers: {
+            "x-content-key": process.env.DASHBOARD_EMPTY_STATE_BANNER_API_KEY || "",
+          },
+        })
+      ).json();
+
+      setEmptyStateImgUrl(resp.data?.empty_state_img_url);
+    })();
+  }, [postsLoaded, isLoading]);
+
   return (
     <Fragment>
       <DashboardTop
@@ -74,14 +94,22 @@ export default function FBDashboard() {
 
                 {/* @ts-expect-error */}
                 {!latestPosts?.posts?.data && postsLoaded && !isLoading && (
-                  <div className="text-center my-10 bg-gray-200 h-48 flex flex-col items-center justify-center px-5 rounded-md">
-                    <p className="text-md">Please connect the channel to see it's recent posts here :)</p>
-                    <button
-                      onClick={() => setShowConnectionsModal(true)}
-                      className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
-                    >
-                      Connect ✨
-                    </button>
+                  <div className="my-10 border shadow-md h-48 flex items-center justify-between rounded-md">
+                    <div className="px-5">
+                      <p className="text-4xl mb-5"> ✨</p>
+                      <p className="text-md">
+                        Please connect the channel <br />
+                        to see it's recent posts here.
+                      </p>
+                      <button
+                        onClick={() => setShowConnectionsModal(true)}
+                        className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
+                      >
+                        Connect
+                      </button>
+                    </div>
+
+                    {emptyStateImgUrl && <img className="w-36 h-full" src={emptyStateImgUrl} />}
                   </div>
                 )}
 
@@ -163,25 +191,27 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
         <Logo noSubtitle={true} />
 
         <div className="mt-4 ml-2 flex items-center gap-7 w-full">
-          <div className="flex items-center border rounded-md h-8 gap-3 px-2">
+          <div className="flex items-center border rounded-md h-8 gap-3">
             {user?.connectedChannel ? (
               <select className="bg-inherit text-sm pr-6 outline-none truncate font-bold">
                 <option className="font-bold">{user?.connectedChannel?.page_name}</option>
               </select>
             ) : (
-              <p className="text-sm">Connect your first channel</p>
+              <button onClick={() => setShowConnectionsModal(true)} className="text-sm px-2">
+                Connect your first channel
+              </button>
             )}
+
+            <button onClick={() => setShowConnectionsModal(true)} className="text-sm border-l h-full pl-3">
+              <FiSettings />
+            </button>
 
             <button
               disabled={!user?.connectedChannel}
-              className="flex items-center gap-2 text-sm border-l h-full pl-2"
+              className="flex items-center gap-2 text-sm border rounded-r-md border-2 h-full px-3 border-green-500"
               onClick={() => setShowCreatePostModal(true)}
             >
               <FiPlus /> Create
-            </button>
-
-            <button onClick={() => setShowConnectionsModal(true)} className="border-l h-full pl-2">
-              <FiSettings />
             </button>
           </div>
 
