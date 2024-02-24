@@ -4,11 +4,13 @@ import CreatePostModal from "@/components/CreatePostModal";
 import Logo from "@/components/Logo";
 import { useUser } from "@/hooks/useUser";
 import { getLatestPosts } from "@/services/connectionService";
+import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { FiDatabase, FiEdit, FiLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
+import { FiDatabase, FiLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
-  const { user } = useUser();
+  const { user, selectedConnectionIndex } = useUser();
+  const router = useRouter();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showConnectionsModal, setShowConnectionsModal] = useState(false);
@@ -20,19 +22,24 @@ export default function FBDashboard() {
   const [postsLoaded, setPostsLoaded] = useState(false);
 
   async function loadLatestPosts() {
-    setLatestPosts(await (await getLatestPosts({ connectionFor: "facebook" })).json());
+    const connId = user?.connections?.[selectedConnectionIndex]?.id;
+    if (!connId) {
+      return;
+    }
+    setLatestPosts(await (await getLatestPosts({ connectionId: connId })).json());
   }
 
   useEffect(() => {
-    // if (!isLoading && !user) {
-    //   router.push("/");
-    // }
-
     (async function () {
       try {
-        if (!user) return;
+        if (isLoading) return;
+
+        if (!user && !isLoading) {
+          router.push("/");
+        }
         loadLatestPosts();
       } catch (err) {
+        setLatestPosts([]);
       } finally {
         setIsLoading(false);
         setPostsLoaded(true);
@@ -40,14 +47,14 @@ export default function FBDashboard() {
     })();
   }, [user, isLoading]);
 
-  useEffect(() => {
-    if (!user?.connectedChannel) {
-      setLatestPosts({});
-    }
-  }, [user?.connectedChannel]);
+  // useEffect(() => {
+  //   if (!user?.connectedChannel) {
+  //     setLatestPosts({});
+  //   }
+  // }, [user?.connectedChannel]);
 
   const [emptyStateImgUrl, setEmptyStateImgUrl] = useState<string | null>(null);
-  
+
   useEffect(() => {
     (async function () {
       if (!postsLoaded || isLoading) {
@@ -55,7 +62,7 @@ export default function FBDashboard() {
       }
 
       const resp = await (
-        await fetch("https://robojson.vercel.app/api/data/", {
+        await fetch("https://robojson.vercel.app/api/data", {
           headers: {
             "x-content-key": process.env.DASHBOARD_EMPTY_STATE_BANNER_API_KEY || "",
           },
@@ -82,16 +89,6 @@ export default function FBDashboard() {
           <Fragment>
             {activeTab === "recent-posts" && (
               <div className=" mt-5 text-sm ">
-                {/* <div className="flex justify-between">
-                  <p className="font-bold">Recent Posts</p>
-                  <button
-                    onClick={() => setShowCreatePostModal(true)}
-                    className="bg-red-500 text-sm text-white px-2 py-1 rounded-md flex items-center gap-2"
-                  >
-                    <FiPlus size={20} /> Create Post
-                  </button>
-                </div> */}
-
                 {/* @ts-expect-error */}
                 {!latestPosts?.posts?.data && postsLoaded && !isLoading && (
                   <div className="my-10 border shadow-md h-48 flex items-center justify-between rounded-md">
@@ -109,7 +106,9 @@ export default function FBDashboard() {
                       </button>
                     </div>
 
-                    {emptyStateImgUrl && <img className="w-36 h-full" src={emptyStateImgUrl} />}
+                    {emptyStateImgUrl && (
+                      <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />
+                    )}
                   </div>
                 )}
 
@@ -122,7 +121,8 @@ export default function FBDashboard() {
                         className="border flex flex-col p-2 flex gap-2 rounded-md shadow w-full max-w-[400px]"
                       >
                         <p className="font-bold italic">
-                          {user?.connectedChannel?.page_name} at {new Date(post.created_time).toDateString()}{" "}
+                          {user?.connections[selectedConnectionIndex]?.page_name} at{" "}
+                          {new Date(post.created_time).toDateString()}{" "}
                         </p>
                         {post.full_picture ? (
                           <img className="w-full my-10" src={post.full_picture} />
@@ -183,7 +183,7 @@ interface DashboardTopProps {
 }
 
 function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setShowCreatePostModal }: DashboardTopProps) {
-  const { user, logoutUser } = useUser();
+  const { user, logoutUser, updatedCurrentConnection } = useUser();
 
   return (
     <div className="bg-white fixed top-0 left-0 w-full border-b py-2 flex flex-col items-center justify-center">
@@ -192,9 +192,18 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
 
         <div className="mt-4 ml-2 flex items-center gap-7 w-full">
           <div className="flex items-center border rounded-md h-8 gap-3">
-            {user?.connectedChannel ? (
-              <select className="bg-inherit text-sm pr-6 outline-none truncate font-bold">
-                <option className="font-bold">{user?.connectedChannel?.page_name}</option>
+            {user?.connections && user.connections?.length > 0 ? (
+              <select
+                onChange={(e) => updatedCurrentConnection(Number(e.target.value))}
+                className="bg-inherit text-sm pr-6 outline-none truncate font-bold pl-2"
+              >
+                {user.connections?.map((channel, index) => {
+                  return (
+                    <option value={index} className="font-bold">
+                      {channel.page_name}
+                    </option>
+                  );
+                })}
               </select>
             ) : (
               <button onClick={() => setShowConnectionsModal(true)} className="text-sm px-2">
@@ -207,7 +216,7 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
             </button>
 
             <button
-              disabled={!user?.connectedChannel}
+              disabled={!user?.connections || user?.connections.length === 0}
               className="flex items-center gap-2 text-sm border rounded-r-md border-2 h-full px-3 border-green-500"
               onClick={() => setShowCreatePostModal(true)}
             >

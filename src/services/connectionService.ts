@@ -7,11 +7,11 @@ interface connectSocialMediaModel {
 
 //TODO: MAYBE ADD useConnection hook  ?
 interface disconnectSocialMediaModel {
-  connectionFor: string;
+  connectionId: string;
 }
 
 interface getLatestPostsModel {
-  connectionFor: "facebook";
+  connectionId: string;
 }
 
 interface createNewPostBody {
@@ -39,7 +39,7 @@ export async function disconnectSocialMedia(params: disconnectSocialMediaModel) 
 
 export async function getLatestPosts(params: getLatestPostsModel) {
   const _ = await roboCreateAPIRequest({
-    endpoint: `connections/getLatestPosts?connectionFor=${params.connectionFor}`,
+    endpoint: `connections/getLatestPosts?connectionId=${params.connectionId}`,
   });
   return _;
 }
@@ -47,7 +47,7 @@ export async function getLatestPosts(params: getLatestPostsModel) {
 export async function createNewPost(params: getLatestPostsModel, body: createNewPostBody) {
   const _ = await roboCreateAPIRequest({
     method: "post",
-    endpoint: `connections/createPost?connectionFor=${params.connectionFor}`,
+    endpoint: `connections/createPost?connectionId=${params.connectionId}`,
     body,
   });
   return _;

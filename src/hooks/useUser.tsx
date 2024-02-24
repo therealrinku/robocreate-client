@@ -6,14 +6,19 @@ import { useRouter } from "next/navigation";
 import { disconnectSocialMedia } from "@/services/connectionService";
 
 export function useUser() {
-  const { isLoading, setIsLoading, user, setUser } = useContext(UserContext);
+  const { isLoading, setIsLoading, user, setUser, selectedConnectionIndex, setSelectedConnectionIndex } =
+    useContext(UserContext);
   const { addNotification } = useNotification();
   const router = useRouter();
 
-  async function removeUserSocialMediaConnection(connectionFor: string) {
+  function updatedCurrentConnection(newChannelIndex: number) {
+    setSelectedConnectionIndex(newChannelIndex);
+  }
+
+  async function removeUserSocialMediaConnection(connId: string) {
     try {
-      await disconnectSocialMedia({ connectionFor: connectionFor });
-      setUser({ ...user, connectedChannel: null });
+      await disconnectSocialMedia({ connectionId: connId });
+      setUser({ ...user, connections: user?.connections.filter((con) => con.id !== connId) });
       addNotification("Channel disconnected successfully.");
     } catch (err) {
       addNotification("Something went wrong while disconnecting the channel.");
@@ -55,5 +60,13 @@ export function useUser() {
     }
   }
 
-  return { isLoading, user, setupUser, logoutUser, removeUserSocialMediaConnection };
+  return {
+    selectedConnectionIndex,
+    updatedCurrentConnection,
+    isLoading,
+    user,
+    setupUser,
+    logoutUser,
+    removeUserSocialMediaConnection,
+  };
 }

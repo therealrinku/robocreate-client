@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function CreatePostModal({ onClose }: Props) {
-  const { user } = useUser();
+  const { user, selectedConnectionIndex } = useUser();
   const { addNotification } = useNotification();
 
   const [message, setMessage] = useState("");
@@ -28,9 +28,15 @@ export default function CreatePostModal({ onClose }: Props) {
     }
 
     try {
+      const connId = user?.connections[selectedConnectionIndex].id;
+
+      if (!connId) {
+        return;
+      }
+
       setIsLoading(true);
       await createNewPost(
-        { connectionFor: "facebook" },
+        { connectionId: connId },
         {
           message: message,
           published: true,
@@ -79,7 +85,13 @@ export default function CreatePostModal({ onClose }: Props) {
               onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
               className="bg-inherit max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded-md"
             >
-              <option value={user?.connectedChannel?.page_id}>{user?.connectedChannel?.page_name}</option>
+              {user?.connections?.map((channel, index) => {
+                return (
+                  <option value={index} className="font-bold">
+                    {channel.page_name}
+                  </option>
+                );
+              })}
             </select>
 
             <select

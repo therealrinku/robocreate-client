@@ -9,28 +9,36 @@ interface UserContextModel {
   user?: {
     id: string;
     email: string;
-    connectedChannel: {
+    connections: Array<{
+      id: string;
       connection_type: string;
       page_id: string;
       page_name: string;
-    };
+    }>;
   };
   setUser: Function;
+  selectedConnectionIndex: number;
+  setSelectedConnectionIndex: Function;
 }
 
 export const UserContext = createContext<UserContextModel>({
   isLoading: false,
   setIsLoading: () => {},
   setUser: () => {},
+  selectedConnectionIndex: 0,
+  setSelectedConnectionIndex: () => {},
 });
 
 export function UserContextProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
+  const [selectedConnectionIndex, setSelectedConnectionIndex] = useState(0);
+
   const router = useRouter();
 
   useEffect(() => {
+    //this does the job of sending fb account's token to the backend
     (async function () {
       if (window) {
         const hasAccessToken = window.location.href?.includes("access_token");
@@ -39,7 +47,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
         if (token) {
           const respJson = await (await connectSocialMedia({ connectionFor: "facebook", token })).json();
           //@ts-expect-error
-          setUser({ ...user, connectedChannel: respJson.connectionDetail });
+          setUser({ ...user, connections: [...user.connections, respJson.connectionDetail] });
           router.push("/dashboard");
         }
       }
@@ -60,5 +68,11 @@ export function UserContextProvider({ children }: PropsWithChildren) {
     })();
   }, []);
 
-  return <UserContext.Provider value={{ isLoading, setIsLoading, user, setUser }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider
+      value={{ selectedConnectionIndex, setSelectedConnectionIndex, isLoading, setIsLoading, user, setUser }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 }
