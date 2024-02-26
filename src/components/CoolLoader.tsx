@@ -14,7 +14,7 @@ export default function CoolLoader() {
         }
         return prev;
       });
-    }, 1000);
+    }, 500);
 
     return () => {
       clearInterval(loaderTimer);

@@ -3,6 +3,7 @@ import { useUser } from "@/hooks/useUser";
 import { Fragment, useState } from "react";
 import LoginModal from "./LoginModal";
 import { useRouter } from "next/navigation";
+import CoolLoader from "./CoolLoader";
 
 export default function LandingButton() {
   const { user, isLoading } = useUser();
@@ -17,14 +18,14 @@ export default function LandingButton() {
     }
   }
 
+  if (isLoading) {
+    return <CoolLoader />;
+  }
+
   return (
     <Fragment>
-      <button
-        onClick={handleClick}
-        className="rounded-md bg-red-600 flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
-        {isLoading ? "Loading.." : user ? "Dashboard" : "Get Started"}
-        {!isLoading && <span aria-hidden="true">&rarr;</span>}
+      <button onClick={handleClick} className="mx-auto mt-8 text-sm font-semibold text-blue-600 hover:text-neutral-600">
+        {user ? "Dashboard " : "Get Started "}»
       </button>
 
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
