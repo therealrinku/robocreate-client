@@ -112,7 +112,7 @@ export default function FBDashboard() {
                   </div>
                 )}
 
-                <div className="pr-5 my-5 flex flex-col gap-5">
+                <div className="my-5 flex flex-col gap-5 items-center lg:items-start">
                   {/* @ts-expect-error  neeed typesafety TODO**/}
                   {latestPosts?.posts?.data?.map((post: any) => {
                     return (
@@ -190,7 +190,7 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
       <div className="max-w-[900px] w-full mx-auto">
         <Logo noSubtitle={true} />
 
-        <div className="mt-4 ml-2 flex items-center gap-7 w-full">
+        <div className="mt-4 ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
           <div className="flex items-center border rounded-md h-8 gap-3">
             {user?.connections && user.connections?.length > 0 ? (
               <select
@@ -238,7 +238,7 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
             <FiPieChart /> Analytics
           </button> */}
 
-          <div className="ml-auto flex items-center gap-4">
+          <div className="ml-0 lg:ml-auto flex items-center gap-4">
             <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
               {user?.email?.slice(0, 1).toUpperCase()}
             </span>
