@@ -157,20 +157,6 @@ export default function FBDashboard() {
                 </div>
               </div>
             )}
-
-            {activeTab === "analytics" && (
-              <div className="my-10 border shadow-md h-48 flex items-center justify-between rounded-md">
-                <div className="px-5">
-                  <p className="text-4xl mb-5"> ✨</p>
-                  <p className="text-md">
-                    Analytics is coming very soon.
-                    <br /> Stay Tuned!
-                  </p>
-                </div>
-
-                {emptyStateImgUrl && <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />}
-              </div>
-            )}
           </Fragment>
         )}
       </div>
@@ -225,19 +211,9 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
               </button>
             )}
 
-            <button onClick={() => setShowConnectionsModal(true)} className="text-sm border-l h-full pl-3">
+            <button onClick={() => setShowConnectionsModal(true)} className="text-sm border-l h-full px-3">
               <FiSettings />
             </button>
-
-            {user?.connections && (
-              <button
-                disabled={!user?.connections || user?.connections.length === 0}
-                className="flex items-center gap-2 text-sm border rounded-r-md border-2 h-full px-3 border-green-500"
-                onClick={() => setShowCreatePostModal(true)}
-              >
-                <FiPlus />
-              </button>
-            )}
           </div>
 
           <button
@@ -247,13 +223,20 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
             <FiDatabase /> Recent Posts
           </button>
 
-          {/* analytics is coming soon baby */}
           <button
+            className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
+            onClick={() => setShowCreatePostModal(true)}
+          >
+            <FiPlus /> Create Post
+          </button>
+
+          {/* analytics is coming soon baby */}
+          {/* <button
             className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
             onClick={() => setActiveTab("analytics")}
           >
             <FiPieChart /> Analytics
-          </button>
+          </button> */}
 
           <div className="ml-auto flex items-center gap-4">
             <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
