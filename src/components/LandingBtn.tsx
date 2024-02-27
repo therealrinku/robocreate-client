@@ -24,8 +24,11 @@ export default function LandingButton() {
 
   return (
     <Fragment>
-      <button onClick={handleClick} className="mx-auto mt-8 text-sm font-semibold text-blue-600 hover:text-neutral-600">
-        {user ? "Dashboard " : "Get Started "}»
+      <button
+        onClick={handleClick}
+        className="mt-10 w-36 p-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+      >
+        {user ? "Dashboard " : "Get Started "}
       </button>
 
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

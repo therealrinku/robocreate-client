@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/useUser";
 import { getLatestPosts } from "@/services/connectionService";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { FiDatabase, FiLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
+import { FiDatabase, FiLink, FiLogOut, FiPieChart, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
   const { user, selectedConnectionIndex } = useUser();
@@ -113,7 +113,7 @@ export default function FBDashboard() {
                 )}
 
                 <div className="pr-5 my-5 flex flex-col gap-5">
-                  {/* @ts-expect-error */}
+                  {/* @ts-expect-error  neeed typesafety TODO**/}
                   {latestPosts?.posts?.data?.map((post: any) => {
                     return (
                       <div
@@ -127,7 +127,7 @@ export default function FBDashboard() {
                         {post.full_picture ? (
                           <img className="w-full my-10" src={post.full_picture} />
                         ) : (
-                          <p className="my-10">{post.message}</p>
+                          <p className="my-5">{post.message}</p>
                         )}
 
                         <div className="flex flex-col gap-2">
@@ -155,6 +155,20 @@ export default function FBDashboard() {
                     );
                   })}
                 </div>
+              </div>
+            )}
+
+            {activeTab === "analytics" && (
+              <div className="my-10 border shadow-md h-48 flex items-center justify-between rounded-md">
+                <div className="px-5">
+                  <p className="text-4xl mb-5"> ✨</p>
+                  <p className="text-md">
+                    Analytics is coming very soon.
+                    <br /> Stay Tuned!
+                  </p>
+                </div>
+
+                {emptyStateImgUrl && <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />}
               </div>
             )}
           </Fragment>
@@ -215,13 +229,15 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
               <FiSettings />
             </button>
 
-            <button
-              disabled={!user?.connections || user?.connections.length === 0}
-              className="flex items-center gap-2 text-sm border rounded-r-md border-2 h-full px-3 border-green-500"
-              onClick={() => setShowCreatePostModal(true)}
-            >
-              <FiPlus /> Create
-            </button>
+            {user?.connections && (
+              <button
+                disabled={!user?.connections || user?.connections.length === 0}
+                className="flex items-center gap-2 text-sm border rounded-r-md border-2 h-full px-3 border-green-500"
+                onClick={() => setShowCreatePostModal(true)}
+              >
+                <FiPlus />
+              </button>
+            )}
           </div>
 
           <button
@@ -232,9 +248,12 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
           </button>
 
           {/* analytics is coming soon baby */}
-          {/* <button disabled className="flex items-center gap-2 text-sm">
-        <FiPieChart /> Analytics
-      </button> */}
+          <button
+            className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
+            onClick={() => setActiveTab("analytics")}
+          >
+            <FiPieChart /> Analytics
+          </button>
 
           <div className="ml-auto flex items-center gap-4">
             <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
