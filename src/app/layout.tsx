@@ -23,12 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${openSans.className} bg-white  `}>
+      <body className={`${openSans.className} bg-gray-100 `}>
         <Providers>
           <NotificationPopup />
           {/* <div className="mt-0 lg:mt-5 pb-10 bg-white max-w-[850px] min-h-[94vh] mx-auto lg:shadow-lg rounded-md"> */}
-            {/* <Nav /> */}
-            {children}
+          {/* <Nav /> */}
+          {children}
           {/* </div> */}
         </Providers>
       </body>

@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/useUser";
 import { getLatestPosts } from "@/services/connectionService";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { FiDatabase, FiLink, FiLogOut, FiPieChart, FiPlus, FiSettings, FiShare } from "react-icons/fi";
+import { FiDatabase, FiExternalLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
   const { user, selectedConnectionIndex } = useUser();
@@ -112,22 +112,20 @@ export default function FBDashboard() {
                   </div>
                 )}
 
-                <div className="my-5 flex flex-col gap-5 items-center lg:items-start">
-                  {/* @ts-expect-error  neeed typesafety TODO**/}
-                  {latestPosts?.posts?.data?.map((post: any) => {
+                <div className="flex flex-col gap-5 items-center lg:items-start">
+                  {/* @ts-expect-error  neeed typesafety TODO **/}
+                  {latestPosts?.posts?.data?.map((post) => {
                     return (
                       <div
                         key={post.id}
-                        className="border flex flex-col p-2 flex gap-2 rounded-md shadow w-full max-w-[400px]"
+                        className="bg-white border flex flex-col p-2 flex gap-2 rounded-md shadow w-full max-w-[400px]"
                       >
-                        <p className="font-bold italic">
-                          {user?.connections[selectedConnectionIndex]?.page_name} at{" "}
-                          {new Date(post.created_time).toDateString()}{" "}
-                        </p>
+                        <p className="font-bold">{user?.connections[selectedConnectionIndex]?.page_name}</p>
+                        <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
                         {post.full_picture ? (
                           <img className="w-full my-10" src={post.full_picture} />
                         ) : (
-                          <p className="my-5">{post.message}</p>
+                          <p className="my-3">{post.message}</p>
                         )}
 
                         <div className="flex flex-col gap-2">
@@ -138,18 +136,9 @@ export default function FBDashboard() {
                               </span>
                             )}
                             <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
-                              <FiLink /> Link
+                              <FiExternalLink /> Link
                             </a>
-                            {/* <span className="flex items-center gap-2">
-                        <FiThumbsUp /> 144
-                      </span> */}
-                            {/* <span className="flex items-center gap-2">
-                        <FiMessageCircle /> 20
-                      </span> */}
                           </div>
-                          {/* <p className="flex items-center gap-2">
-                      <FiClock /> 3 mins ago
-                    </p> */}
                         </div>
                       </div>
                     );
@@ -186,11 +175,11 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
   const { user, logoutUser, updatedCurrentConnection } = useUser();
 
   return (
-    <div className="bg-white fixed top-0 left-0 w-full border-b py-2 flex flex-col items-center justify-center">
+    <div className="bg-white fixed top-0 left-0 w-full border-b py-3 flex flex-col items-center justify-center">
       <div className="max-w-[900px] w-full mx-auto">
-        <Logo noSubtitle={true} />
+        <div className="ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
+          <Logo logoOnly />
 
-        <div className="mt-4 ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
           <div className="flex items-center border rounded-md h-8 gap-3">
             {user?.connections && user.connections?.length > 0 ? (
               <select
@@ -211,20 +200,27 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
               </button>
             )}
 
-            <button onClick={() => setShowConnectionsModal(true)} className="text-sm border-l h-full px-3">
+            <button
+              onClick={() => setShowConnectionsModal(true)}
+              className="text-sm border-l h-full px-3 hover:bg-gray-100"
+            >
               <FiSettings />
             </button>
           </div>
 
           <button
-            className={`flex items-center gap-2 text-sm ${activeTab === "recent-posts" && "text-red-500 font-bold"}  `}
+            className={`flex items-center gap-2 text-sm hover:text-gray-700 ${
+              activeTab === "recent-posts" && "text-red-500 font-bold"
+            }  `}
             onClick={() => setActiveTab("recent-posts")}
           >
             <FiDatabase /> Recent Posts
           </button>
 
           <button
-            className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
+            className={`flex items-center gap-2 text-sm hover:text-gray-700 ${
+              activeTab === "analytics" && "text-red-500 font-bold"
+            }  `}
             onClick={() => setShowCreatePostModal(true)}
           >
             <FiPlus /> Create Post
