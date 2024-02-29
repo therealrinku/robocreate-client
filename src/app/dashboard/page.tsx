@@ -90,8 +90,8 @@ export default function FBDashboard() {
             {activeTab === "recent-posts" && (
               <div className=" mt-5 text-sm ">
                 {/* @ts-expect-error */}
-                {!latestPosts?.posts?.data && postsLoaded && !isLoading && (
-                  <div className="my-10 border shadow-md h-48 flex items-center justify-between rounded-md">
+                {!latestPosts?.posts?.data && !isLoading && (
+                  <div className="my-10 bg-white border shadow-md h-48 flex items-center justify-between rounded-md">
                     <div className="px-5">
                       <p className="text-4xl mb-5"> ✨</p>
                       <p className="text-md">
