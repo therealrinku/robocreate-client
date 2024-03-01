@@ -47,24 +47,22 @@ export default function LoginModal({ onClose }: Props) {
       <div className="flex justify-between mb-5">
         <p className="font-bold">Continue to create with Robocreate</p>
       </div>
-      
+
       <div className="flex items-center gap-5 mb-5">
         <button
-          className={!isSignup ? "bg-red-500 px-3 py-1 text-white rounded-md" : ""}
+          className={!isSignup ? "bg-red-500 px-3 py-1 text-white rounded" : ""}
           onClick={() => setIsSignup(false)}
         >
           Login
         </button>
-        <button
-          className={isSignup ? "bg-red-500 px-3 py-1 text-white rounded-md" : ""}
-          onClick={() => setIsSignup(true)}
-        >
+        <button className={isSignup ? "bg-red-500 px-3 py-1 text-white rounded" : ""} onClick={() => setIsSignup(true)}>
           Signup
         </button>
       </div>
 
-      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-5 items-start" onSubmit={handleSubmit}>
         <input
+          id="email"
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -72,6 +70,7 @@ export default function LoginModal({ onClose }: Props) {
           placeholder="Email"
           required
         />
+
         <input
           type="password"
           value={password}
@@ -95,7 +94,7 @@ export default function LoginModal({ onClose }: Props) {
         <button
           type="submit"
           disabled={isSubmitButtonDisabled}
-          className="border bg-red-500 py-2 text-white rounded-md text-sm font-bold w-full disabled:opacity-60"
+          className="border bg-red-500 py-2 text-white rounded text-sm font-bold w-full disabled:opacity-60"
         >
           {isSignup ? "Signup & Continue" : "Login"}
         </button>

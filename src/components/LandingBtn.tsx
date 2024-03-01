@@ -26,7 +26,7 @@ export default function LandingButton() {
     <Fragment>
       <button
         onClick={handleClick}
-        className="mt-10 w-36 p-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+        className="text-xs font-bold mt-5 px-12 py-3 bg-red-500 text-white rounded shadow-md hover:bg-red-600"
       >
         {user ? "Dashboard " : "Get Started "}
       </button>
