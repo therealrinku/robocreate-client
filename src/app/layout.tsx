@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className={`${openSans.className} bg-gray-100 `}>
         <Providers>
           <NotificationPopup />
-          {/* <div className="mt-0 lg:mt-5 pb-10 bg-white max-w-[850px] min-h-[94vh] mx-auto lg:shadow-lg rounded-md"> */}
+          {/* <div className="mt-0 lg:mt-5 pb-10 bg-white max-w-[850px] min-h-[94vh] mx-auto lg:shadow-lg rounded"> */}
           {/* <Nav /> */}
           {children}
           {/* </div> */}

@@ -10,7 +10,7 @@ export default function NotificationPopup() {
   }
 
   return (
-    <div style={{ zIndex: 100 }} className="fixed bottom-10 right-10 bg-red-500 text-white rounded-md">
+    <div style={{ zIndex: 100 }} className="fixed bottom-10 right-10 bg-red-500 text-white rounded">
       <div className="flex items-center gap-2 px-5 min-w-48 py-3 justify-between">
         <p className="text-sm">{notification}</p>
         <button onClick={clearNotification}>

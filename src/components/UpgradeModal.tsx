@@ -9,7 +9,7 @@ interface Props {
 export default function UpgradeModal({ onClose }: Props) {
   return (
     <ModalWrapper onClose={onClose}>
-      <div className="bg-white min-w-[300px] p-4 rounded-md flex flex-col items-center">
+      <div className="bg-white min-w-[300px] p-4 rounded flex flex-col items-center">
         <Logo logoOnly />
 
         <div className="text-sm flex flex-col mt-10">
@@ -25,7 +25,7 @@ export default function UpgradeModal({ onClose }: Props) {
             </p>
           </section>
 
-          <button className="bg-red-500 w-full mt-10 text-white py-2 rounded-md">Coming Soon ✨</button>
+          <button className="bg-red-500 w-full mt-10 text-white py-2 rounded">Coming Soon ✨</button>
         </div>
       </div>
     </ModalWrapper>

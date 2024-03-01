@@ -40,7 +40,7 @@ export default function Nav() {
               <button
                 disabled={isLoading}
                 onClick={() => setShowLoginModal(true)}
-                className="font-bold px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
+                className="font-bold px-5 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
               >
                 Login
               </button>
@@ -49,7 +49,7 @@ export default function Nav() {
                 {pathname !== "/dashboard" && (
                   <button
                     onClick={() => router.push("/dashboard")}
-                    className="font-bold px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
+                    className="font-bold px-5 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
                   >
                     Dashboard
                   </button>
@@ -64,7 +64,7 @@ export default function Nav() {
                 <button
                   disabled={isLoading}
                   onClick={logoutUser}
-                  className="font-bold px-5 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600 disabled:opacity-60"
+                  className="font-bold px-5 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-60"
                 >
                   Logout
                 </button>

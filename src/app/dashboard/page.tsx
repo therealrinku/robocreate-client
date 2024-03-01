@@ -91,7 +91,7 @@ export default function FBDashboard() {
               <div className=" mt-5 text-sm ">
                 {/* @ts-expect-error */}
                 {!latestPosts?.posts?.data && !isLoading && (
-                  <div className="my-10 bg-white border shadow-md h-48 flex items-center justify-between rounded-md">
+                  <div className="my-10 bg-white border shadow-md h-48 flex items-center justify-between rounded">
                     <div className="px-5">
                       <p className="text-4xl mb-5"> ✨</p>
                       <p className="text-md">
@@ -100,7 +100,7 @@ export default function FBDashboard() {
                       </p>
                       <button
                         onClick={() => setShowConnectionsModal(true)}
-                        className="mt-3 px-3 py-1 rounded-md bg-red-500 text-white"
+                        className="mt-3 px-3 py-1 rounded bg-red-500 text-white"
                       >
                         Connect
                       </button>
@@ -112,13 +112,13 @@ export default function FBDashboard() {
                   </div>
                 )}
 
-                <div className="flex flex-col gap-5 items-center lg:items-start">
+                <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
                   {/* @ts-expect-error  neeed typesafety TODO **/}
                   {latestPosts?.posts?.data?.map((post) => {
                     return (
                       <div
                         key={post.id}
-                        className="bg-white border flex flex-col p-2 flex gap-2 rounded-md shadow w-full max-w-[400px]"
+                        className="bg-white border flex flex-col p-2 flex gap-2 rounded shadow w-full max-w-[400px]"
                       >
                         <p className="font-bold">{user?.connections[selectedConnectionIndex]?.page_name}</p>
                         <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
@@ -180,7 +180,7 @@ function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setSho
         <div className="ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
           <Logo logoOnly />
 
-          <div className="flex items-center border rounded-md h-8 gap-3">
+          <div className="flex items-center border rounded h-8 gap-3">
             {user?.connections && user.connections?.length > 0 ? (
               <select
                 onChange={(e) => updatedCurrentConnection(Number(e.target.value))}

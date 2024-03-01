@@ -83,7 +83,7 @@ export default function CreatePostModal({ onClose }: Props) {
             <select
               value={selectedPageIndex}
               onChange={(e) => setSelectedPageIndex(Number(e.target.value))}
-              className="bg-inherit max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded-md"
+              className="bg-inherit max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded"
             >
               {user?.connections?.map((channel, index) => {
                 return (
@@ -97,7 +97,7 @@ export default function CreatePostModal({ onClose }: Props) {
             <select
               value={postNow}
               onChange={(e) => setPostNow(e.target.value)}
-              className="bg-inherit text-black max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded-md"
+              className="bg-inherit text-black max-w-24 pr-5 truncate border p-2 text-xs outline-none rounded"
             >
               <option value="yes">Post now</option>
               <option disabled value="no">
@@ -119,7 +119,7 @@ export default function CreatePostModal({ onClose }: Props) {
           <div className="flex items-center gap-5 mt-10 w-full">
             <input
               placeholder="Post Text....."
-              className="bg-inherit rounded-md focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
+              className="bg-inherit rounded focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}

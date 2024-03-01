@@ -28,7 +28,7 @@ export default function ConnectionsModal({ onClose }: Props) {
         <div className="mt-5 flex flex-col gap-3">
           {user?.connections.map((connection) => {
             return (
-              <div className="flex items-center gap-2 border rounded-md p-2">
+              <div className="flex items-center gap-2 border rounded p-2">
                 <FiFacebook size={20} />
 
                 <p className="font-bold">{connection.page_name}</p>
@@ -43,7 +43,7 @@ export default function ConnectionsModal({ onClose }: Props) {
             );
           })}
 
-          <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded-md p-2">
+          <a href={fbDialogPopupURI} className="flex items-center gap-2 border rounded p-2">
             <FiFacebook size={20} />
 
             <button className="text-red-500 font-bold">connect</button>

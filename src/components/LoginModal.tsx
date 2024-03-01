@@ -66,7 +66,7 @@ export default function LoginModal({ onClose }: Props) {
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded-md text-sm"
+          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
           placeholder="Email"
           required
         />
@@ -75,7 +75,7 @@ export default function LoginModal({ onClose }: Props) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded-md text-sm"
+          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
           placeholder="Password"
           required
         />
@@ -85,7 +85,7 @@ export default function LoginModal({ onClose }: Props) {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded-md text-sm"
+            className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
             placeholder="Confirm Password"
             required
           />
