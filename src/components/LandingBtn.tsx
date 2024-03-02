@@ -1,14 +1,22 @@
 "use client";
 import { useUser } from "@/hooks/useUser";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import LoginModal from "./LoginModal";
 import { useRouter } from "next/navigation";
 import CoolLoader from "./CoolLoader";
 
 export default function LandingButton() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading: isUserLoading } = useUser();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(isUserLoading);
+
+  useEffect(() => {
+    if (!isUserLoading) {
+      setIsLoading(false);
+    }
+  }, [isUserLoading]);
 
   function handleClick() {
     if (user) {
