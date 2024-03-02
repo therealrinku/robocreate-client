@@ -16,6 +16,8 @@ export default function FBDashboard() {
   const { user, isLoading: isUserLoading, selectedConnectionIndex } = useUser();
   const router = useRouter();
 
+  const selectedConnection = user?.connections[selectedConnectionIndex];
+
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showConnectionsModal, setShowConnectionsModal] = useState(false);
   const [activeTab, setActiveTab] = useState("recent-posts");
@@ -75,10 +77,7 @@ export default function FBDashboard() {
                 latestPosts?.posts?.data &&
                 latestPosts.posts.data.length > 0 && (
                   <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
-                    <Feed
-                      feed={latestPosts?.posts || {}}
-                      pageName={user?.connections[selectedConnectionIndex]?.page_name}
-                    />
+                    <Feed feed={latestPosts?.posts || {}} pageName={selectedConnection?.page_name} />
                   </div>
                 )}
             </div>

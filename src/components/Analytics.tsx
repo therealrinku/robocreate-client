@@ -22,7 +22,7 @@ export default function Analytics() {
         setIsLoading(false);
       } catch (err) {}
     })();
-  }, [user]);
+  }, [user, selectedConnection]);
 
   if (isLoading) {
     return <p className="text-sm">Loading Analytics... Hold tight.</p>;
