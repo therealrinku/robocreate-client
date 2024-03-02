@@ -24,15 +24,10 @@ Backend:  <a href="https://github.com/therealrinku/robocreate-backend" target="_
 
 - ✨ Create post on your preferred social media pages (facebook page only for now)
 - ✨ Clean and Minimal dashboard to see the latest posts 
+- ✨ Analytics to see the posts engagement and more analytics coming soon
 - 🔥 Support for other social media coming soon 
 - 🔥 Ability to create bulk posts(same post for multiple social media at once) coming soon
-- 🔥 Analytics coming soon
 
 ## License
 
 MIT License, Open Source
-
-
-## Note
-
-All the features maynot be available right now 🥲 as application is under active development mode
