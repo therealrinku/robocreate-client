@@ -2,12 +2,14 @@
 import ConnectionsModal from "@/components/ConnectionsModal";
 import CoolLoader from "@/components/CoolLoader";
 import CreatePostModal from "@/components/CreatePostModal";
-import Logo from "@/components/Logo";
+import DashboardNav from "@/components/DashboardNav";
+import EmptyFeedAdvert from "@/components/EmptyFeedAdvert";
+import Feed from "@/components/Feed";
 import { useUser } from "@/hooks/useUser";
+import { latestPostsResponseModel } from "@/models/fb";
 import { getLatestPosts } from "@/services/connectionService";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { FiDatabase, FiExternalLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
   const { user, isLoading: isUserLoading, selectedConnectionIndex } = useUser();
@@ -15,30 +17,30 @@ export default function FBDashboard() {
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showConnectionsModal, setShowConnectionsModal] = useState(false);
-
   const [activeTab, setActiveTab] = useState("recent-posts");
-
   const [isLoading, setIsLoading] = useState(true);
-  const [latestPosts, setLatestPosts] = useState({});
+  const [latestPosts, setLatestPosts] = useState<latestPostsResponseModel | undefined>();
 
   async function loadLatestPosts() {
-    const connId = user?.connections?.[selectedConnectionIndex]?.id;
-    if (!connId) {
+    try {
+      const connId = user?.connections?.[selectedConnectionIndex]?.id;
+      if (!connId) {
+        setIsLoading(false);
+        return;
+      }
+
+      const resp: latestPostsResponseModel = await (await getLatestPosts({ connectionId: connId })).json();
+      setLatestPosts(resp);
       setIsLoading(false);
-      return;
+    } catch (err) {
+      setLatestPosts(undefined);
     }
-    setLatestPosts(await (await getLatestPosts({ connectionId: connId })).json());
-    setIsLoading(false);
   }
 
   useEffect(() => {
     (async function () {
-      try {
-        if (!user) return;
-        await loadLatestPosts();
-      } catch (err) {
-        setLatestPosts([]);
-      }
+      if (!user) return;
+      await loadLatestPosts();
     })();
   }, [user, selectedConnectionIndex]);
 
@@ -48,29 +50,13 @@ export default function FBDashboard() {
     }
   }, [user, isUserLoading]);
 
-  const [emptyStateImgUrl, setEmptyStateImgUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async function () {
-      const resp = await (
-        await fetch("https://robojson.vercel.app/api/data", {
-          headers: {
-            "x-content-key": process.env.DASHBOARD_EMPTY_STATE_BANNER_API_KEY || "",
-          },
-        })
-      ).json();
-
-      setEmptyStateImgUrl(resp.data?.empty_state_img_url);
-    })();
-  }, []);
-
   if (isLoading) {
     return <CoolLoader />;
   }
 
   return (
     <Fragment>
-      <DashboardTop
+      <DashboardNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         setShowConnectionsModal={setShowConnectionsModal}
@@ -81,58 +67,16 @@ export default function FBDashboard() {
         <Fragment>
           {activeTab === "recent-posts" && (
             <div className=" mt-5 text-sm ">
-              {user?.connections?.length === 0 && (
-                <div className="bg-white border shadow-md h-48 flex items-center justify-between rounded">
-                  <div className="px-5">
-                    <p className="text-4xl mb-5"> ✨</p>
-                    <p className="text-md">
-                      Please connect the channel <br />
-                      to see it's recent posts here.
-                    </p>
-                    <button
-                      onClick={() => setShowConnectionsModal(true)}
-                      className="mt-3 px-3 py-1 rounded bg-red-500 text-white"
-                    >
-                      Connect
-                    </button>
-                  </div>
+              {user?.connections?.length === 0 && <EmptyFeedAdvert setShowConnectionsModal={setShowConnectionsModal} />}
 
-                  {emptyStateImgUrl && <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />}
+              {latestPosts?.posts?.data && latestPosts.posts.data.length > 0 && (
+                <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
+                  <Feed
+                    feed={latestPosts?.posts || {}}
+                    pageName={user?.connections[selectedConnectionIndex]?.page_name}
+                  />
                 </div>
               )}
-
-              <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
-                {/* @ts-expect-error  neeed typesafety TODO **/}
-                {latestPosts?.posts?.data?.map((post) => {
-                  return (
-                    <div
-                      key={post.id}
-                      className="bg-white border flex flex-col p-2 flex gap-2 rounded shadow w-full max-w-[400px]"
-                    >
-                      <p className="font-bold">{user?.connections[selectedConnectionIndex]?.page_name}</p>
-                      <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
-                      {post.full_picture ? (
-                        <img className="w-full my-10" src={post.full_picture} />
-                      ) : (
-                        <p className="my-3">{post.message}</p>
-                      )}
-
-                      <div className="flex flex-col gap-2">
-                        <div className="flex gap-3">
-                          {post.shares && (
-                            <span className="flex items-center gap-2">
-                              <FiShare /> {post.shares.count}
-                            </span>
-                          )}
-                          <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
-                            <FiExternalLink /> Link
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           )}
         </Fragment>
@@ -149,90 +93,5 @@ export default function FBDashboard() {
 
       {showConnectionsModal && <ConnectionsModal onClose={() => setShowConnectionsModal(false)} />}
     </Fragment>
-  );
-}
-
-interface DashboardTopProps {
-  activeTab: string;
-  setActiveTab: Function;
-  setShowConnectionsModal: Function;
-  setShowCreatePostModal: Function;
-}
-
-function DashboardTop({ activeTab, setActiveTab, setShowConnectionsModal, setShowCreatePostModal }: DashboardTopProps) {
-  const { user, logoutUser, updatedCurrentConnection } = useUser();
-
-  return (
-    <div className="bg-white fixed top-0 left-0 w-full border-b py-3 flex flex-col items-center justify-center">
-      <div className="max-w-[900px] w-full mx-auto">
-        <div className="ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
-          <Logo logoOnly />
-
-          <div className="flex items-center border rounded h-8 gap-3">
-            {user?.connections && user.connections?.length > 0 ? (
-              <select
-                onChange={(e) => updatedCurrentConnection(Number(e.target.value))}
-                className="bg-inherit text-sm pr-6 outline-none truncate font-bold pl-2"
-              >
-                {user.connections?.map((channel, index) => {
-                  return (
-                    <option value={index} className="font-bold">
-                      {channel.page_name}
-                    </option>
-                  );
-                })}
-              </select>
-            ) : (
-              <button onClick={() => setShowConnectionsModal(true)} className="text-sm px-2">
-                Connect your first channel
-              </button>
-            )}
-
-            <button
-              onClick={() => setShowConnectionsModal(true)}
-              className="text-sm border-l h-full px-3 hover:bg-gray-100"
-            >
-              <FiSettings />
-            </button>
-          </div>
-
-          <button
-            className={`flex items-center gap-2 text-sm hover:text-gray-700 ${
-              activeTab === "recent-posts" && "text-red-500 font-bold"
-            }  `}
-            onClick={() => setActiveTab("recent-posts")}
-          >
-            <FiDatabase /> Recent Posts
-          </button>
-
-          <button
-            className={`flex items-center gap-2 text-sm hover:text-gray-700 ${
-              activeTab === "analytics" && "text-red-500 font-bold"
-            }  `}
-            onClick={() => setShowCreatePostModal(true)}
-          >
-            <FiPlus /> Create Post
-          </button>
-
-          {/* analytics is coming soon baby */}
-          {/* <button
-            className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
-            onClick={() => setActiveTab("analytics")}
-          >
-            <FiPieChart /> Analytics
-          </button> */}
-
-          <div className="ml-0 lg:ml-auto flex items-center gap-4">
-            <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
-              {user?.email?.slice(0, 1).toUpperCase()}
-            </span>
-
-            <button onClick={logoutUser} className="flex items-center gap-2 text-sm">
-              <FiLogOut /> Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
