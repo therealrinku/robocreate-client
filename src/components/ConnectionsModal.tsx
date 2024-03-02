@@ -13,7 +13,7 @@ export default function ConnectionsModal({ onClose }: Props) {
   const [fbDialogPopupURI, setFBDialogPopupURI] = useState("");
 
   useEffect(() => {
-    const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement";
+    const requiredScopes = "pages_manage_engagement,pages_manage_posts,pages_read_engagement,read_insights ";
     const fullURI = `https://www.facebook.com/v19.0/dialog/oauth?redirect_uri=${window.location.origin}&client_id=881256046505003&scope=${requiredScopes}&response_type=token`;
     setFBDialogPopupURI(fullURI);
   }, []);
