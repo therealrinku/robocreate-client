@@ -44,6 +44,13 @@ export async function getLatestPosts(params: getLatestPostsModel) {
   return _;
 }
 
+export async function getPageInsights(params: getLatestPostsModel) {
+  const _ = await roboCreateAPIRequest({
+    endpoint: `connections/getPageInsights?connectionId=${params.connectionId}`,
+  });
+  return _;
+}
+
 export async function createNewPost(params: getLatestPostsModel, body: createNewPostBody) {
   const _ = await roboCreateAPIRequest({
     method: "post",

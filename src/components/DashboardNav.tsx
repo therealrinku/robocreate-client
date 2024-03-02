@@ -1,6 +1,6 @@
 import { useUser } from "@/hooks/useUser";
 import Logo from "./Logo";
-import { FiDatabase, FiLogOut, FiPlus, FiSettings } from "react-icons/fi";
+import { FiDatabase, FiLogOut, FiPieChart, FiPlus, FiSettings } from "react-icons/fi";
 
 interface Props {
   activeTab: string;
@@ -61,21 +61,19 @@ export default function DashboardNav({
           </button>
 
           <button
-            className={`flex items-center gap-2 text-sm hover:text-gray-700 ${
-              activeTab === "analytics" && "text-red-500 font-bold"
-            }  `}
+            className={`flex items-center gap-2 text-sm hover:text-gray-700`}
             onClick={() => setShowCreatePostModal(true)}
           >
             <FiPlus /> Create Post
           </button>
 
           {/* analytics is coming soon baby */}
-          {/* <button
-              className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
-              onClick={() => setActiveTab("analytics")}
-            >
-              <FiPieChart /> Analytics
-            </button> */}
+          <button
+            className={`flex items-center gap-2 text-sm ${activeTab === "analytics" && "text-red-500 font-bold"}  `}
+            onClick={() => setActiveTab("analytics")}
+          >
+            <FiPieChart /> Analytics
+          </button>
 
           <div className="ml-0 lg:ml-auto flex items-center gap-4">
             <span className="font-bold text-xs bg-gray-200 w-7 h-7 flex flex-col items-center justify-center rounded-full">
