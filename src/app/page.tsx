@@ -11,7 +11,7 @@ export default function Home() {
           </div>
 
           <p className="text-md">
-            Lets <span className="bg-red-500 px-2 text-white rounded">continue</span> your <br />
+            Lets continue your <br />
             <i>social media management journey</i>
             <br /> with <b>Robocreate</b>
           </p>
