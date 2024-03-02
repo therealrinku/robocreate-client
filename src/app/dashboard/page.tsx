@@ -1,5 +1,6 @@
 "use client";
 import ConnectionsModal from "@/components/ConnectionsModal";
+import CoolLoader from "@/components/CoolLoader";
 import CreatePostModal from "@/components/CreatePostModal";
 import Logo from "@/components/Logo";
 import { useUser } from "@/hooks/useUser";
@@ -9,7 +10,7 @@ import { Fragment, useEffect, useState } from "react";
 import { FiDatabase, FiExternalLink, FiLogOut, FiPlus, FiSettings, FiShare } from "react-icons/fi";
 
 export default function FBDashboard() {
-  const { user, selectedConnectionIndex } = useUser();
+  const { user, isLoading: isUserLoading, selectedConnectionIndex } = useUser();
   const router = useRouter();
 
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
@@ -19,48 +20,38 @@ export default function FBDashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [latestPosts, setLatestPosts] = useState({});
-  const [postsLoaded, setPostsLoaded] = useState(false);
 
   async function loadLatestPosts() {
     const connId = user?.connections?.[selectedConnectionIndex]?.id;
     if (!connId) {
+      setIsLoading(false);
       return;
     }
     setLatestPosts(await (await getLatestPosts({ connectionId: connId })).json());
+    setIsLoading(false);
   }
 
   useEffect(() => {
     (async function () {
       try {
-        if (isLoading) return;
-
-        if (!user && !isLoading) {
-          router.push("/");
-        }
-        loadLatestPosts();
+        if (!user) return;
+        await loadLatestPosts();
       } catch (err) {
         setLatestPosts([]);
-      } finally {
-        setIsLoading(false);
-        setPostsLoaded(true);
       }
     })();
-  }, [user, isLoading, selectedConnectionIndex]);
+  }, [user, selectedConnectionIndex]);
 
-  // useEffect(() => {
-  //   if (!user?.connectedChannel) {
-  //     setLatestPosts({});
-  //   }
-  // }, [user?.connectedChannel]);
+  useEffect(() => {
+    if (!user && !isUserLoading) {
+      router.push("/");
+    }
+  }, [user, isUserLoading]);
 
   const [emptyStateImgUrl, setEmptyStateImgUrl] = useState<string | null>(null);
 
   useEffect(() => {
     (async function () {
-      if (!postsLoaded || isLoading) {
-        return;
-      }
-
       const resp = await (
         await fetch("https://robojson.vercel.app/api/data", {
           headers: {
@@ -71,7 +62,11 @@ export default function FBDashboard() {
 
       setEmptyStateImgUrl(resp.data?.empty_state_img_url);
     })();
-  }, [postsLoaded, isLoading]);
+  }, []);
+
+  if (isLoading) {
+    return <CoolLoader />;
+  }
 
   return (
     <Fragment>
@@ -83,70 +78,64 @@ export default function FBDashboard() {
       />
 
       <div className="flex flex-col">
-        {isLoading && <p className="mt-10 m-5 text-sm text-center">Loading....</p>}
-
-        {!isLoading && (
-          <Fragment>
-            {activeTab === "recent-posts" && (
-              <div className=" mt-5 text-sm ">
-                {user?.connections?.length === 0 && !isLoading && (
-                  <div className="bg-white border shadow-md h-48 flex items-center justify-between rounded">
-                    <div className="px-5">
-                      <p className="text-4xl mb-5"> ✨</p>
-                      <p className="text-md">
-                        Please connect the channel <br />
-                        to see it's recent posts here.
-                      </p>
-                      <button
-                        onClick={() => setShowConnectionsModal(true)}
-                        className="mt-3 px-3 py-1 rounded bg-red-500 text-white"
-                      >
-                        Connect
-                      </button>
-                    </div>
-
-                    {emptyStateImgUrl && (
-                      <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />
-                    )}
+        <Fragment>
+          {activeTab === "recent-posts" && (
+            <div className=" mt-5 text-sm ">
+              {user?.connections?.length === 0 && (
+                <div className="bg-white border shadow-md h-48 flex items-center justify-between rounded">
+                  <div className="px-5">
+                    <p className="text-4xl mb-5"> ✨</p>
+                    <p className="text-md">
+                      Please connect the channel <br />
+                      to see it's recent posts here.
+                    </p>
+                    <button
+                      onClick={() => setShowConnectionsModal(true)}
+                      className="mt-3 px-3 py-1 rounded bg-red-500 text-white"
+                    >
+                      Connect
+                    </button>
                   </div>
-                )}
 
-                <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
-                  {/* @ts-expect-error  neeed typesafety TODO **/}
-                  {latestPosts?.posts?.data?.map((post) => {
-                    return (
-                      <div
-                        key={post.id}
-                        className="bg-white border flex flex-col p-2 flex gap-2 rounded shadow w-full max-w-[400px]"
-                      >
-                        <p className="font-bold">{user?.connections[selectedConnectionIndex]?.page_name}</p>
-                        <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
-                        {post.full_picture ? (
-                          <img className="w-full my-10" src={post.full_picture} />
-                        ) : (
-                          <p className="my-3">{post.message}</p>
-                        )}
+                  {emptyStateImgUrl && <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />}
+                </div>
+              )}
 
-                        <div className="flex flex-col gap-2">
-                          <div className="flex gap-3">
-                            {post.shares && (
-                              <span className="flex items-center gap-2">
-                                <FiShare /> {post.shares.count}
-                              </span>
-                            )}
-                            <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
-                              <FiExternalLink /> Link
-                            </a>
-                          </div>
+              <div className="flex flex-col mb-5 gap-5 items-center lg:items-start">
+                {/* @ts-expect-error  neeed typesafety TODO **/}
+                {latestPosts?.posts?.data?.map((post) => {
+                  return (
+                    <div
+                      key={post.id}
+                      className="bg-white border flex flex-col p-2 flex gap-2 rounded shadow w-full max-w-[400px]"
+                    >
+                      <p className="font-bold">{user?.connections[selectedConnectionIndex]?.page_name}</p>
+                      <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
+                      {post.full_picture ? (
+                        <img className="w-full my-10" src={post.full_picture} />
+                      ) : (
+                        <p className="my-3">{post.message}</p>
+                      )}
+
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-3">
+                          {post.shares && (
+                            <span className="flex items-center gap-2">
+                              <FiShare /> {post.shares.count}
+                            </span>
+                          )}
+                          <a href={post.permalink_url} target="_blank" className="flex items-center gap-2">
+                            <FiExternalLink /> Link
+                          </a>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </Fragment>
-        )}
+            </div>
+          )}
+        </Fragment>
       </div>
 
       {showCreatePostModal && (
