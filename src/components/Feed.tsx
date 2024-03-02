@@ -1,5 +1,5 @@
 import { feedModel, feedPostModel } from "@/models/fb";
-import { FiExternalLink, FiMessageCircle, FiShare, FiThumbsUp } from "react-icons/fi";
+import { FiLink2, FiMessageCircle, FiShare2, FiThumbsUp } from "react-icons/fi";
 
 interface FeedProps {
   feed: feedModel;
@@ -43,11 +43,11 @@ function FeedPost({ post, pageName }: FeedPostProps) {
           )}
           {post.shares && (
             <span className="flex items-center gap-2">
-              <FiShare /> {post.shares.count}
+              <FiShare2 /> {post.shares.count}
             </span>
           )}
           <a href={post.permalink_url} target="_blank" className="flex ml-auto items-center gap-2">
-            <FiExternalLink /> Link
+            <FiLink2 /> Link
           </a>
         </div>
       </div>
