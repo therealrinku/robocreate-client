@@ -1,6 +1,7 @@
 import { useUser } from "@/hooks/useUser";
 import Logo from "./Logo";
 import { FiDatabase, FiLogOut, FiPieChart, FiPlus, FiSettings } from "react-icons/fi";
+import Link from "next/link";
 
 interface Props {
   activeTab: string;
@@ -21,7 +22,9 @@ export default function DashboardNav({
     <div className="bg-white fixed top-0 left-0 w-full border-b py-3 flex flex-col items-center justify-center">
       <div className="max-w-[900px] w-full mx-auto">
         <div className="ml-2 flex flex-col lg:flex-row items-center gap-7 w-full">
-          <Logo logoOnly />
+          <Link href="/dashboard">
+            <Logo logoOnly />
+          </Link>
 
           <div className="flex items-center border rounded h-8 gap-3">
             {user?.connections && user.connections?.length > 0 ? (
