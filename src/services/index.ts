@@ -1,5 +1,4 @@
 import { robocreateAPIBaseUrl } from "@/utils/contants";
-// import { cookies } from "next/headers";
 
 interface roboCreateAPIRequestModel {
   endpoint: string;
@@ -22,7 +21,6 @@ export async function roboCreateAPIRequest({
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      // "Set-Cookie": JSON.stringify(cookies().get("robocreateTkn")?.value),
     },
     body: JSON.stringify(body),
   });
