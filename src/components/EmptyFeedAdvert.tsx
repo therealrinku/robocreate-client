@@ -22,19 +22,19 @@ export default function EmptyFeedAdvert({ setShowConnectionsModal }: Props) {
   }, []);
 
   return (
-    <div className="bg-white border shadow-md h-48 flex items-center justify-between rounded">
+    <div className="bg-white border shadow-md h-48 flex items-center justify-between ">
       <div className="px-5">
         <p className="text-4xl mb-5"> ✨</p>
         <p className="text-md">
           Please connect the channel <br />
           to see it's recent posts here.
         </p>
-        <button onClick={() => setShowConnectionsModal(true)} className="mt-3 px-3 py-1 rounded bg-red-500 text-white">
+        <button onClick={() => setShowConnectionsModal(true)} className="mt-3 px-3 py-1  bg-red-500 text-white">
           Connect
         </button>
       </div>
 
-      {emptyStateImgUrl && <img className="w-56 object-cover h-full rounded-r-md" src={emptyStateImgUrl} />}
+      {emptyStateImgUrl && <img className="w-56 object-cover h-full -r-md" src={emptyStateImgUrl} />}
     </div>
   );
 }

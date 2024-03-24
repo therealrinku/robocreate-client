@@ -19,7 +19,7 @@ export default function Feed({ feed, pageName }: FeedProps) {
 
 function FeedPost({ post, pageName }: FeedPostProps) {
   return (
-    <div key={post.id} className="bg-white border flex flex-col p-2 flex gap-2 rounded shadow w-full max-w-[400px]">
+    <div key={post.id} className="bg-white border flex flex-col p-2 flex gap-2  shadow w-full max-w-[400px]">
       <p className="font-bold">{pageName}</p>
       <p className="text-xs">{new Date(post.created_time).toDateString()} </p>
 

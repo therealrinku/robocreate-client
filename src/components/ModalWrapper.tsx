@@ -13,7 +13,7 @@ export default function ModalWrapper({ children, onClose }: Props) {
     >
       <div onClick={onClose} className="absolute bg-transparent h-full w-full z-10"></div>
 
-      <div className="z-20 bg-white min-w-[300px] lg:w-full lg:max-w-[400px] text-sm rounded">
+      <div className="z-20 bg-white min-w-[300px] lg:w-full lg:max-w-[400px] text-sm ">
         <div onClick={onClose} className="relative w-inherit">
           <button className="absolute right-3 top-2">
             <FiX color="black" size={20} />

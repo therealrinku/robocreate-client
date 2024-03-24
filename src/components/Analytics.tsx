@@ -58,7 +58,7 @@ export default function Analytics() {
 
   return (
     <div className=" mb-3 text-sm ">
-      <div className="bg-white p-3 border rounded shadow">
+      <div className="bg-white p-3 border  shadow">
         <p className="mb-3 font-bold">Page Posts Engagements(Last 15 days)</p>
 
         <Line data={pagePostsEngagementChartConfig.data} options={pagePostsEngagementChartConfig.options} />

@@ -6,7 +6,7 @@ export default function Home() {
     <section className="bg-[#fff8f1] h-screen flex flex-col items-center justify-center">
       <div>
         <div className="flex flex-col items-center  w-full mb-12 text-center">
-          <div className="my-5 border inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mx-auto mb-5 text-blue-600 rounded-full bg-gray-50">
+          <div className="my-5 border inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mx-auto mb-5 text-blue-600 -full bg-gray-50">
             <Logo logoOnly />
           </div>
 

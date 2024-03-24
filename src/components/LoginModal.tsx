@@ -50,12 +50,12 @@ export default function LoginModal({ onClose }: Props) {
 
       <div className="flex items-center gap-5 mb-5">
         <button
-          className={!isSignup ? "bg-red-500 px-3 py-1 text-white rounded" : ""}
+          className={!isSignup ? "bg-red-500 px-3 py-1 text-white " : ""}
           onClick={() => setIsSignup(false)}
         >
           Login
         </button>
-        <button className={isSignup ? "bg-red-500 px-3 py-1 text-white rounded" : ""} onClick={() => setIsSignup(true)}>
+        <button className={isSignup ? "bg-red-500 px-3 py-1 text-white " : ""} onClick={() => setIsSignup(true)}>
           Signup
         </button>
       </div>
@@ -66,7 +66,7 @@ export default function LoginModal({ onClose }: Props) {
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
+          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none  text-sm"
           placeholder="Email"
           required
         />
@@ -75,7 +75,7 @@ export default function LoginModal({ onClose }: Props) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
+          className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none  text-sm"
           placeholder="Password"
           required
         />
@@ -85,7 +85,7 @@ export default function LoginModal({ onClose }: Props) {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none rounded text-sm"
+            className="border p-2 w-full focus:border-red-500 focus:border-2 outline-none  text-sm"
             placeholder="Confirm Password"
             required
           />
@@ -94,7 +94,7 @@ export default function LoginModal({ onClose }: Props) {
         <button
           type="submit"
           disabled={isSubmitButtonDisabled}
-          className="border bg-red-500 py-2 text-white rounded text-sm font-bold w-full disabled:opacity-60"
+          className="border bg-red-500 py-2 text-white  text-sm font-bold w-full disabled:opacity-60"
         >
           {isSignup ? "Signup & Continue" : "Login"}
         </button>
