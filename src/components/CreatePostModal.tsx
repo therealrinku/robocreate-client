@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { createNewPost } from "@/services/connectionService";
 import { useNotification } from "@/hooks/useNotification";
 import ModalWrapper from "./ModalWrapper";
+import { isValidURL } from "@/utils/helpers";
 
 interface Props {
   onClose: () => void;
@@ -12,6 +13,8 @@ export default function CreatePostModal({ onClose }: Props) {
   const { user, selectedConnectionIndex } = useUser();
   const { addNotification } = useNotification();
 
+  const [postType, setPostType] = useState<"text" | "image">("text");
+  const [imageUrl, setImageUrl] = useState("");
   const [message, setMessage] = useState("");
   const [postNow, setPostNow] = useState("yes");
   const [selectedPublishTimestamp, setSelectedPublishTimestamp] = useState<number>(Date.now());
@@ -35,12 +38,12 @@ export default function CreatePostModal({ onClose }: Props) {
       }
 
       setIsLoading(true);
+
+      const textPostBody = { message, published: true };
+      const imagePostBody = { imageUrl };
       await createNewPost(
-        { connectionId: connId },
-        {
-          message: message,
-          published: true,
-        }
+        { connectionId: connId, postType: postType },
+        postType === "image" ? imagePostBody : textPostBody
       );
 
       setMessage("");
@@ -116,18 +119,63 @@ export default function CreatePostModal({ onClose }: Props) {
             )}
           </div>
 
+          <div className="mt-5 flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              <input
+                checked={postType === "text"}
+                onChange={() => setPostType("text")}
+                name="postType"
+                id="radio2"
+                type="radio"
+              />
+              <label htmlFor="radio2">Text Post</label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                checked={postType === "image"}
+                onChange={() => setPostType("image")}
+                name="postType"
+                id="radio1"
+                type="radio"
+              />
+              <label htmlFor="radio1">Image Post</label>
+            </div>
+          </div>
+
           <div className="flex items-center gap-5 mt-10 w-full">
-            <input
-              placeholder="Post Text....."
-              className="bg-inherit  focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button disabled={!message.trim() || isLoading} className="disabled:opacity-50" onClick={handlePost}>
+            {postType === "image" ? (
+              <input
+                placeholder="Post Image Url....."
+                className="bg-inherit  focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            ) : (
+              <input
+                placeholder="Post Text....."
+                className="bg-inherit  focus:border-red-500 focus:border-2 border p-2 outline-none text-sm w-[90%]"
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            )}
+
+            <button
+              disabled={
+                (postType === "text" && !message.trim()) || (postType === "image" && !isValidURL(imageUrl)) || isLoading
+              }
+              className="disabled:opacity-50"
+              onClick={handlePost}
+            >
               {isLoading ? "posting...." : "post"}
             </button>
           </div>
+
+          {postType === "image" && !isValidURL(imageUrl) && (
+            <p className="mt-2 text-red-500 text-sm">Invalid image url</p>
+          )}
         </div>
       </main>
     </ModalWrapper>

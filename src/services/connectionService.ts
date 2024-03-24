@@ -12,11 +12,13 @@ interface disconnectSocialMediaModel {
 
 interface getLatestPostsModel {
   connectionId: string;
+  postType: "text" | "image";
 }
 
 interface createNewPostBody {
-  message: string;
-  published: boolean;
+  message?: string;
+  published?: boolean;
+  imageUrl?: string;
 }
 
 export async function connectSocialMedia(body: connectSocialMediaModel) {
@@ -54,7 +56,7 @@ export async function getPageInsights(params: getLatestPostsModel) {
 export async function createNewPost(params: getLatestPostsModel, body: createNewPostBody) {
   const _ = await roboCreateAPIRequest({
     method: "post",
-    endpoint: `connections/createPost?connectionId=${params.connectionId}`,
+    endpoint: `connections/createPost?connectionId=${params.connectionId}&postType=${params.postType}`,
     body,
   });
   return _;
