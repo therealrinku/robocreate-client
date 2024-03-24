@@ -12,7 +12,7 @@ interface disconnectSocialMediaModel {
 
 interface getLatestPostsModel {
   connectionId: string;
-  postType: "text" | "image";
+  postType?: "text" | "image";
 }
 
 interface createNewPostBody {
