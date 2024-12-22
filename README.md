@@ -32,7 +32,7 @@ To run this project locally, follow these steps:
 
 1. Clone the repository.
    ```bash
-   git clone https://github.com/therealrinku/robojson.git
+   git clone https://github.com/therealrinku/robocreate-client.git
 
 2. Install the dependencies.
    ```bash
