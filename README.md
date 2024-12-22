@@ -38,7 +38,9 @@ To run this project locally, follow these steps:
    ```bash
    yarn install
    
-3. Add backend api base url(ROBOCREATE_API_BASE_URL) to env https://robocreate-api.vercel.app in this case.
+3. Add backend api base url(ROBOCREATE_API_BASE_URL) to env\
+   check https://github.com/therealrinku/robocreate-backend for backend code
+
 
 4. Run the project.
    ```bash
