@@ -23,7 +23,6 @@
 
 ## Technologies Used
 <img src="https://img.shields.io/badge/next-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
-<img src="https://img.shields.io/badge/node-000000?style=for-the-badge&logo=nodedotjs&logoColor=yellow"/>
 <img src="https://img.shields.io/badge/typescript-000000?style=for-the-badge&logo=typescript&logoColor=blue"/>
 
 ## Development
